@@ -1,6 +1,3 @@
-https://code.visualstudio.com/docs/languages/markdown
-
-https://jira.udev.six3/secure/Dashboard.jspa
 
 # Terminal / Bash
 
@@ -14,36 +11,38 @@ Make nested directories , folders :
 
 # Git
 
-SUPER amazing Git tutorials and articles: 
-    https://www.atlassian.com/git/tutorials
+SUPER amazing Git tutorials and articles:
+    <https://www.atlassian.com/git/tutorials>
 
-#### Branch Tracking
+## Branch Tracking
+
     git branch -u origin/<branch>
 
-#### Updating Your Feature Branch With Changes From Main
+## Updating Your Feature Branch With Changes From Main
+
 There's two main strategies for this:
     1. Rebase on main
     2. Merge main into your feature branch
 
-#### Merging Main Into Feature Branches
-    $ git checkout main
-    $ git pull
-    $ git checkout feature-branch
-    $ git merge main
-    $ git push
+### Merging Main Into Feature Branches
 
-#### Rebasing
+    git checkout main
+    git pull
+    git checkout feature-branch
+    git merge main
+    git push
+
+### Rebasing
 
 **How do you get the new changes from main into your feature branch (in the event your branch is very out of date)?**
     git checkout feature-branch
     git rebase main
-    
+
     If you have already published your feature branch to remote then:
        git pull --rebase
 
     Info:
     https://stackoverflow.com/questions/42861353/git-pull-after-git-rebase
-
 
 **I’m having some weird git issues [git was rejecting pushes of feature2] and now it is clear this is because my two feature branches on the heimdall-client are set to track different things.  One is set to track the remote version of the branch and the other is set to track main.
 Which should we set our branches to track?  RN it is like this:
@@ -60,8 +59,6 @@ To see what a single branch is tracking:
 
 If it prints a remote, it's tracking something. If it prints nothing and returns failure, it's not.
     A :  Both branches should track the remote versions of themselves.  feature2 tracks remote feature2, known as origin/feature2
-
-
 
 # Deployment
 
@@ -90,14 +87,16 @@ Install new helm charts:
 helm install heimdall-service heimdallservice-chart-0.1.0.tgz -n beta
 
 ## Pipeline Variable Scopes
+
 Variables declared inside the .gitlab-ci.yml CAN be accessed inside the pom.xml and settings.xml files.  Such pipeline variables must be all caps.
 
-Variables declared inside the pom.xml inside the <properties></properties> tag CAN be used inside the .gitlab-ci.yml, pom.xml, and pipelines.
+Variables declared inside the pom.xml inside the `<properties></properties>` tag CAN be used inside the .gitlab-ci.yml, pom.xml, and pipelines.
 
 Variables declared on gitlab.com CAN be used inside the pom.xml, settings.xml and the pipeline .gitlab-ci.yml.
 
 ## Default Variables For Pipelines
-Gitlab has many default variables available for use. Here is a link to them: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+
+Gitlab has many default variables available for use. Here is a link to them: <https://docs.gitlab.com/ee/ci/variables/predefined_variables.html>
 
 You can use these anywhere inside the pom.xml, settings.xml and .gitlab-ci.yml.
 
@@ -112,7 +111,6 @@ To see all the values available to you inside your runner use:
         - echo "GitLab CI/CD | Print all environment variables"
         - env
 
-
 ## Notes From Infrastructure On Builds and Pipelines
 
 A sample project could look something like this:
@@ -123,7 +121,7 @@ A sample project could look something like this:
     - serviceABC/tests/ <- automated tests
     - serviceABC/.gitlab-ci.yml <- pipeline definition
 
-#### Docker
+### Docker
 
 Docker is a broad set of technologies that are used to work with containers. Docker has it's own container runtime, and that is what I am use to. However, Kubernetes (k8s) is depreciating docker as a runtime within it's environment. You might want to look into using other container runtimes than docker, such as containerd or cri-o to build your image. I know docker, so that is what I'll use as an example, and other container runtimes should be very similar if not identical commands.
 Docker is what you would use to create an image. You can think of an image almost like a mini computer. It's what we load into the k8s container which runs in a k8s pod.
@@ -133,7 +131,7 @@ Once you have an image, the goal is to get the image on the the k8s cluster. A n
     docker push nexus-repo/serviceABC:v1
 Now the image is in a location that you can access it from your k8s cluster and will pull it during the creation of your k8s deployment/pods. This is an important piece of the puzzle.
 
-#### Helm
+### Helm
 
 Helm is pretty simple. It's not just made for k8s, but it's what is used by everyone I've ever known that deploys into k8s. You can use helm for anything that needs search/replace and version control. Helm is a VERY fancy search/replace tool that also gives you the ability to rollback to previous versions of your k8s deployment. You could in theory create your k8s files, and then "apply" those files by hand one by one. Depending on how big your deployment is, that could be a giant pain. Or you could bundle all of your k8s files together into a single helm chart and push it to a k8s cluster. And better yet, you can make it so your chart can deploy onto multiple k8s clusters and vary the details of of the deployment (name, cpu, etc) it's using in the values.yaml file. Now you can see why helm is so helpful.
 Quick note, make sure that you are using version 3 of helm (helm3). Helm2 will require you to have a tiller within your k8s namespace, and it's just a hassle. I know you prob don't know what I'm talking about, and that's fine. Just use helm3. If you really care, google it.
@@ -141,17 +139,17 @@ Quick note, make sure that you are using version 3 of helm (helm3). Helm2 will r
     helm create serviceABC
     ls -1 serviceABC
 
-  - charts <- Dependent charts. You prob wont need this.
-  - Chart.yaml <- Define your chart (name, version, description, etc). Metadata on your chart.
-  - values.yaml <- File that holds values to be replaced into the template files below. Substitute values files to quickly change your flavor of deployment.
-  - templates <- The good stuff.
-    - deployment.yaml <- populate this
-    - service.yaml <- populate this
-    - hpa.yaml <- prob don't need
-    - serviceaccount.yaml <- prob don't need
-    - ingress.yaml <- prob don't need
-    - NOTES.txt <- prob don't need
-    - _helpers.tpl <- prob don't need
+- charts <- Dependent charts. You prob wont need this.
+- Chart.yaml <- Define your chart (name, version, description, etc). Metadata on your chart.
+- values.yaml <- File that holds values to be replaced into the template files below. Substitute values files to quickly change your flavor of deployment.
+- templates <- The good stuff.
+  - deployment.yaml <- populate this
+  - service.yaml <- populate this
+  - hpa.yaml <- prob don't need
+  - serviceaccount.yaml <- prob don't need
+  - ingress.yaml <- prob don't need
+  - NOTES.txt <- prob don't need
+  - _helpers.tpl <- prob don't need
   
 The deployment is where you will define your pods. With what little time you have, I would focus on that. The service is pretty much a load-balancer for your pods and you will want that as well. It is going to be within the pod definition within your deployment that you will define what image to use to run within your pod container. You will want to define that in your values file. I think I saw you guys are already doing that.
 However, the hpa, serviceaccount and ingress files are for advanced configuration, so I wouldn't worry about those. The _helpers.tmp file is for advanced usage of helm. If you guys have time to learn how to define Go templating in that file than great. But I won't worry about it.
@@ -165,7 +163,7 @@ Now that you have your charts filled out, move the files to your cluster and ins
 
 The above command will upgrade your service if it already exists (so you don't have to delete it first) or will install it if it doesn't already exist. It also is pointing to a special v--set values that overrides the values file that was just used. It also waits for the deployment to finish instead of kicking it off and returning right away, but will mark it as failed after 500 seconds.
 
-#### Kubectl
+### Kubectl
 
 Now that you have your helm charts installed into k8s, you can see your service within the cluster.
     kubectl get deployments
@@ -183,9 +181,7 @@ You may want to look into setting up a "NodePort" service instead of a "ClusterI
 Pipeline
 Whatever you are doing by hand to build your application, test it, and deploy it should be captured in the pipeline. That way you can focus on writing code and making changes. As soon as you push out a change, it all happens automagically and your hotness is in the cluster without you having to do anything.
 
-
-
-#### Configuring the Gitlab Runner
+### Configuring the Gitlab Runner
 
 Within the /etc/gitlab-runner/config.toml file that describes the runners configuration, you can define mounts that will be available to the executor when they spin up to execute a job. If you want docker to be able to run within the container and run docker commands, you will need to mount the docker executable and the docker socket that allows the server-side daemon to communicate with its cmd line interface. The volumes will look like this in your runner config.
 volumes = ["/usr/bin/docker:/usr/bin/docker", "/var/run/docker.sock:/var/run/docker.sock", "/cache"]
@@ -197,6 +193,7 @@ I also ran into an issue infrastructure helped with when initially setting this 
     service docker start
 
 ### Practicing With Minikube
+
 Starting two nodes in minikube:
     minikube start --nodes 2
 
@@ -207,7 +204,7 @@ Stopping/deleting all minikube clusters:
 
 Kubernetes allows you to run your applications remotely and scale up your services automatically as your demand grows, or automatically redeploy and replace a service node if one dies.  Once you have a cluster, the Kubernetes Deployment Controller watches your Kubernetes cluster and repairs nodes if they break, or replaces them when they die.  The Controller uses the configmaps of your service to deploy and redeploy your service.  The deployment configuration gives kubernetes instructions on how to redeploy your service.
 
-Cheat Sheet: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+Cheat Sheet: <https://kubernetes.io/docs/reference/kubectl/cheatsheet/>
 
 Enter Kubernetes cluster:
     ssh kctl-intern1
@@ -216,7 +213,7 @@ Exit (use either of the following):
     ~.
     exit
 
-Get info about the kubernetes cluster: 
+Get info about the kubernetes cluster:
     kubectl get services
     kubectl get pods -n beta
     kubectl explain pods
@@ -241,8 +238,7 @@ see what ports are exposed:
     kubectl get svc --all-namespaces
 
 **How a Kubernetes Pod Gets an IP Address**
-https://ronaknathani.com/blog/2020/08/how-a-kubernetes-pod-gets-an-ip-address/
-
+<https://ronaknathani.com/blog/2020/08/how-a-kubernetes-pod-gets-an-ip-address/>
 
 ## ConfigMaps
 
@@ -265,7 +261,7 @@ Depending on the source, the attribute will be:
     --from file (if the source is a file/directory)
     --from-literal (if the source is a key-value pair)
 
-More ways and details: https://phoenixnap.com/kb/kubernetes-configmap-create-and-use
+More ways and details: <https://phoenixnap.com/kb/kubernetes-configmap-create-and-use>
 
 **Viewing Config Maps**
 To see details from a Kubernetes ConfigMap and the values for keys, use the command:
@@ -277,33 +273,34 @@ The two ways to configure a pod to use a ConfigMap are:
     - Mount the ConfigMap as a volume
     - Use environment variables
 
-
 **What is hostPort and hostIP?**
-https://stackoverflow.com/questions/63691946/kubernetes-what-is-hostport-and-hostip-used-for
+<https://stackoverflow.com/questions/63691946/kubernetes-what-is-hostport-and-hostip-used-for>
+
 # Redis
 
 Redis is an In-Memory Database that provides very fast read, write, and search capabilities.  The database's information is stored inside the memory of the redis server and therefore offers much lower latency than if the data were on a disk (disk access is slow).  Multiple services can connect and utilize a Redis server simulataneously without issue.  Redis can automatically back up the data to disk if desired.  Then if the Redis server goes down, at least the data up and to that point persists.
 
 The foundational data type of Redis are Strings.  These are stored as key, value pairs and from that basic structure, Redis implements several other datatypes.  
 The types of data supported by Redis are :
--   Binary-safe strings.
--   Lists: collections of string elements sorted according to the order of insertion. They are basically linked lists.
--   Sets: collections of unique, unsorted string elements.
--   Sorted sets, similar to Sets but where every string element is associated to a floating number value, called score. The elements are always taken sorted by their score, so unlike Sets it is possible to retrieve a range of elements (for example you may ask: give me the top 10, or the bottom 10).
--   Hashes, which are maps composed of fields associated with values. Both the field and the value are strings. This is very similar to Ruby or Python hashes.
--   Bit arrays (or simply bitmaps): it is possible, using special commands, to handle String values like an array of bits: you can set and clear individual bits, count all the bits set to 1, find the first set or unset bit, and so forth.
--   HyperLogLogs: this is a probabilistic data structure which is used in order to estimate the cardinality of a set. Don't be scared, it is simpler than it seems... - See later in the HyperLogLog section of this tutorial.
--   Streams: append-only collections of map-like entries that provide an abstract log data type. They are covered in depth in the Introduction to Redis Streams.
 
+- Binary-safe strings.
+- Lists: collections of string elements sorted according to the order of insertion. They are basically linked lists.
+- Sets: collections of unique, unsorted string elements.
+- Sorted sets, similar to Sets but where every string element is associated to a floating number value, called score. The elements are always taken sorted by their score, so unlike Sets it is possible to retrieve a range of elements (for example you may ask: give me the top 10, or the bottom 10).
+- Hashes, which are maps composed of fields associated with values. Both the field and the value are strings. This is very similar to Ruby or Python hashes.
+- Bit arrays (or simply bitmaps): it is possible, using special commands, to handle String values like an array of bits: you can set and clear individual bits, count all the bits set to 1, find the first set or unset bit, and so forth.
+- HyperLogLogs: this is a probabilistic data structure which is used in order to estimate the cardinality of a set. Don't be scared, it is simpler than it seems... - See later in the HyperLogLog section of this tutorial.
+- Streams: append-only collections of map-like entries that provide an abstract log data type. They are covered in depth in the Introduction to Redis Streams.
 
 External programs talk to Redis using a TCP socket and a Redis specific protocol. This protocol is implemented in the Redis client libraries for the different programming languages. However to make hacking with Redis simpler Redis provides a command line utility that can be used to send commands to Redis. This program is called redis-cli.
 
 Run Redis in interactive mode:
     $ redis-cli
 
-### Redis on Kubernetes
+## Redis on Kubernetes
+
 Create your redis config map and pod:
-https://phoenixnap.com/kb/kubernetes-redis
+<https://phoenixnap.com/kb/kubernetes-redis>
 
 If your pod is named "redis", start the redis pod with :
     kubectl exec -it redis -- redis-cli
@@ -316,6 +313,7 @@ Get info about a Redis server:
         HELLO
 
 ### Redis Commands
+
     To see all commands relating to the client connection
         CLIENT HELP
 
@@ -328,8 +326,9 @@ Get info about a Redis server:
     - values have to be encapsulated in quotes if there are spaces
     - you can escape values with \
 
-### Redis Errors/Troubleshooting
-**Problem:** 
+## Redis Errors/Troubleshooting
+
+**Problem:**
     [scottj@kctl-intern1 ~]$ kubectl get pods
     NAME           READY   STATUS       RESTARTS   AGE
     redis          1/1     Running      0          3d1h
@@ -339,15 +338,14 @@ redis-client shows start error.
 
 Solution: Turned out I was being an idiot and put the client configuration there on kubernetes.  We only need the server there.  Also it did not try restarting the client bc the configuration was set to "Restart: Never", presumably because it was a tutorial.
 
-
 **Problem:**
-Jedis was giving this error inside the debug console - 
+Jedis was giving this error inside the debug console -
         redis.clients.jedis.exceptions.JedisConnectionException: Failed to create socket.
 No values were able to be sent to Redis. The resource did not successfully connect.
 
 Fake Solution:
     Have you checked if the port for the Redis server in kubernetes has been exposed?
-    I checked with: 
+    I checked with:
         kubectl get svc --all-namespaces
 
     It turned out, no, there was no exposed 6379 port for redis.
@@ -364,15 +362,15 @@ VS Code tells you that you need to add the maxmemory key, value pair to your yam
 Solution:
 Don't believe it, VS CODE LIES.  This is what happened:
 [scottj@kctl-intern1 ~]$ kubectl apply -f redis-server/redis1/redis-pod.yaml
-The Pod "redis1" is invalid: 
-* spec.containers[0].resources.limits[maxmemory]: Invalid value: "maxmemory": must be a standard resource type or fully qualified
-* spec.containers[0].resources.limits[maxmemory]: Invalid value: "maxmemory": must be a standard resource for containers
-* spec.containers[0].resources.requests[maxmemory]: Invalid value: "maxmemory": must be a standard resource type or fully qualified
-* spec.containers[0].resources.requests[maxmemory]: Invalid value: "maxmemory": must be a standard resource for containers
+The Pod "redis1" is invalid:
 
-
+- spec.containers[0].resources.limits[maxmemory]: Invalid value: "maxmemory": must be a standard resource type or fully qualified
+- spec.containers[0].resources.limits[maxmemory]: Invalid value: "maxmemory": must be a standard resource for containers
+- spec.containers[0].resources.requests[maxmemory]: Invalid value: "maxmemory": must be a standard resource type or fully qualified
+- spec.containers[0].resources.requests[maxmemory]: Invalid value: "maxmemory": must be a standard resource for containers
 
 ### Redis Client in Quarkus
+
 Quarkus autocreates the RedisClient if you have the dependency added to the ?? main pom.xml file and build the project, and you also have it configured in your application configuration file.  
 
 If it does not find the client you try to use the @Inject tag to inject it, your client will be null and it will throw an exception when you try to do anything like send a command.
@@ -381,27 +379,24 @@ I am still figuring out where to put the dependency to make it work but believe 
 
 [Quarkus RedisClient Class File](https://github.com/quarkusio/quarkus/blob/592c48987f7c7e3f50599dfaadbcc79f4ab1425a/extensions/redis-client/runtime/src/main/java/io/quarkus/redis/client/RedisClient.java)
 
-https://github.com/quarkusio/quarkus/search?q=RedisClient
+<https://github.com/quarkusio/quarkus/search?q=RedisClient>
 
-https://github.com/machi1990/quarkus/tree/d7e13b7273bf41179f410436485947f45ba59155/integration-tests/redis-client
+<https://github.com/machi1990/quarkus/tree/d7e13b7273bf41179f410436485947f45ba59155/integration-tests/redis-client>
 
-https://quarkus.io/guides/redis
-
-
+<https://quarkus.io/guides/redis>
 
 ### Jedis Redis Client
-https://github.com/redis/jedis
-https://www.baeldung.com/jedis-java-redis-client-library
 
-https://javapointers.com/how-to/use-redis-java-using-jedis/
+<https://github.com/redis/jedis>
+<https://www.baeldung.com/jedis-java-redis-client-library>
 
+<https://javapointers.com/how-to/use-redis-java-using-jedis/>
 
 **Mocking the Jedis Connection**
 At start of service inject IP address and port.  Mockito will mock the jedis connection.
 
-
-
 # User Groups
+
 To see all the groups you have available:
     groups
 
@@ -426,24 +421,51 @@ Problem(s):
     This private key will be ignored.
     Load key “/home/scottj/.ssh/id_rsa”: bad permissions
 
-Reason this happened: 
+Reason this happened:
     I had modified the users on my udev machine when trying to add myself to the docker user group.  They went in and fixed that but then my profile permissions were still unlocked.  To fix it, I did:
         chmod 400 /home/scottj/.ssh/id_rsa
 
+# Python
+
+## Pep8
+
+### Imports
+
+Imports are usually on separate lines like so:
+    `import newspaper
+
+    from newspaper import Article
+    from nltk.tokenize import sent_tokenize # absolute, thrid party import
+    `
+
+Three sections to the imports:
+    1. Standard library imports
+    2. Related third party imports (modules that are installed and do not belong to the the current application)
+    3. Local application/library specific imports
+
+**Not-as-good-but-sometimes-ok Relative Imports**
+    `from . import ap_script
+    from .sibling import example`
+
+These are acceptable when the import will be too verbose to be explicit.
+'Standard library code should avoid complex package layouts and always use absolute imports.'
 
 # Java
 
-### POJOs
+## POJOs
+
 A "plain old java object", known as a pojo is a simple object class in java and it may or may not follow any standard naming conventions, access methods, or implementation styles.  The point is that it is a basic java object, plain and simple.
 
 ### A Java Bean
-A JavaBean is a POJO with a strict set of rules as follows:
--   Access levels – our properties are private and we expose getters and setters
--   Method names – our getters and setters follow the getX and setX convention (in the case of a boolean, isX can be used for a getter)
--   Default Constructor – a no-argument constructor must be present so an instance can be created without providing arguments, for example during deserialization
--   Serializable – implementing the Serializable interface allows us to store the state
 
-### Try-With-Resources
+A JavaBean is a POJO with a strict set of rules as follows:
+
+- Access levels – our properties are private and we expose getters and setters
+- Method names – our getters and setters follow the getX and setX convention (in the case of a boolean, isX can be used for a getter)
+- Default Constructor – a no-argument constructor must be present so an instance can be created without providing arguments, for example during deserialization
+- Serializable – implementing the Serializable interface allows us to store the state
+
+## Try-With-Resources
 
 The try-with-resources statement is a try statement that creates, aka declares, one or more resources (objects that need to be closed after use).  The try-with-resources statement closes the object automatically at the end of the statement.
 
@@ -451,9 +473,10 @@ Any object that implements the class java.lang.AutoCloseable, which includes eve
 
 An example could be a file.  You try to open the file to do something with it and an exception occurs.  You could create the file reader and file buffer in the try () parenthesis and it would be auto-closed if reading from the file failed.
 
-### Project Structure
+## Project Structure
 
-### Grokking
+## Grokking
+
 The code is clear enough another person can immediately understand it and reproduce it.
 
 Most important code quality factors:
@@ -462,29 +485,31 @@ Most important code quality factors:
     2 Robust
     3 Performant
 
-### States, Mutability, and "final"
+## States, Mutability, and "final"
+
 **Minimize mutability**
 Java best practice is to minimize the number of states your object and class can be in so as to minimize the number of things that can go wrong.  The more states you have possible, the more cases you have to handle.
 
 **Reflection**
 Reflection allows you to access strings at runtime without modifying code.  Reflection can be very useful in certain contexts but also makes java very dangerous so you have to be mindful and make things final so they cannot be changed through reflection.
 
-Clean Code book 
+Clean Code book
 Never pass in more than 3 parameters - nit pick opinion for readability
 
-### Exceptions
-Make sure you put as much useful information as possible when throwing an exception so when you're debugging you know what you need to fix.
-A service is made of projects, which are made of packages, which are made of classes. You want low coupling - a change in one place does not cause changes in other places and high cohesion - if one changes, all or most should change. Almost everything should follow the Single Responsibilty Principle (SRP). For more on cohesion and coupling: https://stackoverflow.com/questions/14000762/what-does-low-in-coupling-and-high-in-cohesion-mean
+## Exceptions
 
-### ->
+Make sure you put as much useful information as possible when throwing an exception so when you're debugging you know what you need to fix.
+A service is made of projects, which are made of packages, which are made of classes. You want low coupling - a change in one place does not cause changes in other places and high cohesion - if one changes, all or most should change. Almost everything should follow the Single Responsibilty Principle (SRP). For more on cohesion and coupling: <https://stackoverflow.com/questions/14000762/what-does-low-in-coupling-and-high-in-cohesion-mean>
+
+## ->
+
 -> part of syntax for lambda expressions. -> separates the parameters (left-side) from the implementation (right-side).
 (parameters) -> {Body}
 
-
-### Switch Statements
+## Switch Statements
 
 **Example**
-A very beautiful switch statement: https://github.com/bertrandmartel/speed-test-lib/blob/master/jspeedtest/src/main/java/fr/bmartel/speedtest/SpeedTestTask.java
+A very beautiful switch statement: <https://github.com/bertrandmartel/speed-test-lib/blob/master/jspeedtest/src/main/java/fr/bmartel/speedtest/SpeedTestTask.java>
     final URL url = new URL(uri);
 
     mProtocol = url.getProtocol();
@@ -527,19 +552,20 @@ A very beautiful switch statement: https://github.com/bertrandmartel/speed-test-
                     "unsupported protocol");
             break;
 
-
-### Files
+## Files
 
 **WOW in-depth tut that helped me with under the hood Path and File stuff:**
-https://golb.hplar.ch/2017/09/Pluggable-file-systems-in-Java.html
+<https://golb.hplar.ch/2017/09/Pluggable-file-systems-in-Java.html>
 
-#### java.io.File
-https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html
+### java.io.File
+
+<https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html>
 File path names are system dependent.
 The filesystem referenced when gettting a path is the path of that file within THAT system.  So with a virtual filesystem, you need to reference that and a different system if you are copying from another place?  Yes.
 
-### Jackson API - turning objects into json strings and back
-https://www.geeksforgeeks.org/convert-java-object-to-json-string-using-jackson-api/
+## Jackson API - turning objects into json strings and back
+
+<https://www.geeksforgeeks.org/convert-java-object-to-json-string-using-jackson-api/>
     Paths.get(dir + "/abc.txt") >> is this as path in the default filesystem
 
     Remember the virtual filesystem lives parallel to the default filesystem. Paths have a filesystem and can not be used in an other filesystem. They are not just names.
@@ -548,11 +574,9 @@ Notes:
 
     Working with virtual filesystems avoid the Paths class. This class will always work in the default filesystem. Files is ok because you have create a path in the correct filesystem first.
 
-
 **How can I copy a file into another location and replace it, if existing?**
     Path p2 = Paths.get("two.txt");
     Files.copy(p1, p2, StandardCopyOption.REPLACE_EXISTING);
-
 
 **How do I get the current working directory?**
  String currentPath = new java.io.File(".").getCanonicalPath();
@@ -560,21 +584,21 @@ Notes:
 
 **How can I store a file in-memory?**
 
-Use the jimfs library : https://github.com/google/jimfs
+Use the jimfs library : <https://github.com/google/jimfs>
 
 Maven dependency:
-    <dependency>
-        <groupId>com.google.jimfs</groupId>
-        <artifactId>jimfs</artifactId>
-        <version>1.2</version>
-    </dependency>
+`<dependency>
+    <groupId>com.google.jimfs</groupId>
+    <artifactId>jimfs</artifactId>
+    <version>1.2</version>
+</dependency>`
 
 ### speed-test-lib
 
 How the download
 
 Download protocol for download speed test:
-https://github.com/bertrandmartel/speed-test-lib/blob/master/jspeedtest/src/main/java/fr/bmartel/speedtest/SpeedTestTask.java
+<https://github.com/bertrandmartel/speed-test-lib/blob/master/jspeedtest/src/main/java/fr/bmartel/speedtest/SpeedTestTask.java>
 
 **Generate Array of Random Bytes**
 byte[] bytes = new byte[20];
@@ -584,19 +608,20 @@ SecureRandom.getInstanceStrong().nextBytes(bytes);
 
 **Changing the version of your project, via maven command**
 Change version from 2.0.0 to 2.1.0:
-    mvn versions:set -DgroupId=org.apache.maven.* -DartifactId=* -DoldVersion=2.* -DnewVersion=2.1.0-SNAPSHOT
-https://www.mojohaus.org/versions-maven-plugin/examples/set.html
-
+    mvn versions:set -DgroupId=org.apache.maven.*-DartifactId=* -DoldVersion=2.* -DnewVersion=2.1.0-SNAPSHOT
+<https://www.mojohaus.org/versions-maven-plugin/examples/set.html>
 
 # Quarkus
 
-### Quarkus Main
+## Quarkus Main
+
 Quarkus automatically has a main created in the background but one can be declared to override the autogenerated one.  No "override" tag is needed or anything - you just declare it normally.
 
 **In what directory does Quarkus run the main function?**
 Regardless of where you place the main, it is run within the root directory of the project.
 
-#### @QuarusMain 
+### @QuarusMain
+
 It's a thing. put this annotation on your main to make quarkus find it.  It seems you still need a manifest file of some sort, but may not need the Main-Class: className , attribute insdie.  I have not confirmed that.
 
 **Problem:  When I run the jar of my quarkus project it gives the error:: no main manifest attribute**
@@ -612,20 +637,21 @@ Add this to your application.properties file (and make one if you do not have it
 
 The following "solutions" are not needed but might have something helpful for other projects.
 
-
 **Wrong Solution: make a MANIFEST.MF file and declare the Main-Class**
 Things to keep in mind while handling Manifest files:
     - You should leave space between the name and value of any section in manifest file, like Version:1.1 is in valid section instead write Version: 1.1 that space between colon and 1.1 really matters a lot.
     - While specifying the main class you should not add .class extension at the end of class name. Simply specify the main class by typing:
         Main-Class: Classname
 
-https://www.baeldung.com/java-jar-manifest#:~:text=The%20manifest%20file%20is%20named%20MANIFEST.MF%20and%20is,execute%2C%20the%20classpath%2C%20signature%20material%20and%20much%20more.
+<https://www.baeldung.com/java-jar-manifest#:~:text=The%20manifest%20file%20is%20named%20MANIFEST.MF%20and%20is,execute%2C%20the%20classpath%2C%20signature%20material%20and%20much%20more>.
 
-https://www.geeksforgeeks.org/working-with-jar-and-manifest-files-in-java/
+<https://www.geeksforgeeks.org/working-with-jar-and-manifest-files-in-java/>
 
 **NEVERMIND**
-__**Forget all this stuff about making one**__
+**Forget all this stuff about making one**
 The easy way:
 To auto generate a MANIFEST.MF file during the build phase:
     You just need to add the maven-jar-plugin to the project pom.xml.
-    https://stackoverflow.com/questions/34674073/how-to-generate-manifest-mf-file-during-compile-phase
+    <https://stackoverflow.com/questions/34674073/how-to-generate-manifest-mf-file-during-compile-phase>
+
+
