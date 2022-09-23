@@ -1,3 +1,9 @@
+# Markdown
+
+## Links (files, url)
+
+Include a relative link to a file:
+    [a relative link](filepath)
 
 # Terminal / Bash
 
@@ -647,11 +653,28 @@ Things to keep in mind while handling Manifest files:
 
 <https://www.geeksforgeeks.org/working-with-jar-and-manifest-files-in-java/>
 
-**NEVERMIND**
-**Forget all this stuff about making one**
-The easy way:
+**maven-jar-plugin**
 To auto generate a MANIFEST.MF file during the build phase:
     You just need to add the maven-jar-plugin to the project pom.xml.
     <https://stackoverflow.com/questions/34674073/how-to-generate-manifest-mf-file-during-compile-phase>
 
+# VS Code
+
+## Problems
+
+### Terminal is closing, or not starting when opened
+
+[PowerShell Error Log](resources/VSCodePowerShellTerminalAutoCloseLog.txt)
+
+Before VS Code said it was having trouble resolving the shell.  I commented out the lines at the beginning of the .zshrc which fetch all the functions etc.  This was based on something online but that definitely didn't fix it (and why would it).
+
+Current .zshrc:
+    #.zshrc
+
+    # Get the aliases and functions
+    #if [ -f ~/.zshrc ]; then
+    #    . ~/.zshrc
+    #fi
+
+    PATH="/Applications/CMake.app/Contents/bin":"$PATH"
 
