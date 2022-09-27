@@ -66,6 +66,10 @@ To see what a single branch is tracking:
 If it prints a remote, it's tracking something. If it prints nothing and returns failure, it's not.
     A :  Both branches should track the remote versions of themselves.  feature2 tracks remote feature2, known as origin/feature2
 
+## Creating A New Repo
+
+When creating a repo with github desktop, it generates a new folder of that name to house the repo. So if you want your repo called "resume" and you tell it to generate the repo inside your "resume" folder, inside your workspace, then the path will be ".../workspace/resume/resume".  Yes I did this.
+
 # Deployment
 
 Build jar:
