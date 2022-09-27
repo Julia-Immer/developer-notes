@@ -443,12 +443,106 @@ Three sections to the imports:
     2. Related third party imports (modules that are installed and do not belong to the the current application)
     3. Local application/library specific imports
 
-**Not-as-good-but-sometimes-ok Relative Imports**
+Imports should be explicit and absolute, as in the example above.
+
+#### Not-as-good-but-sometimes-ok Relative Imports
+
     `from . import ap_script
     from .sibling import example`
 
 These are acceptable when the import will be too verbose to be explicit.
+
 'Standard library code should avoid complex package layouts and always use absolute imports.'
+
+#### Wildcard Imports: Stay the hell away
+
+    `from math import *
+    `
+You have no idea what you've imported, and even if you do, everything in that module is now in the namespace.  You don't need that and it might confuse the python interpreter.
+
+### String Quotes
+
+Be consistent with your style, either using all single or double quotes for strings.  When a string contains the quote used to encase strings, use the other kind instead of backslashes.
+
+### Whitespace
+
+Binary operators must be surrounded by one space.  These include: (=, +=, ==, <, >, !=, +, -, in, not in, is, and, or). The exception to this is when operators of different priorities are used such as * and +.  The you might take out the space around the first priority operators like so:
+
+    `i = i + 3
+    x = x*4 + 1
+    f = (a+b) * (c+d)
+    `
+Where should operators be placed when you have a multi-line series of items like so:
+    `surplus = (income
+                - taxes
+                - rent
+                - food
+                - (yearly_ira_contribution/12)
+                - bills
+                + side_hustle)`
+
+### Comments
+
+Did you know pep8 says to use inline comments sparingly? I wonder what they consider sparing.  I love a good inline comment (when it truly adds something to context).  I think they want us to avoid all unecessary ones like those that kinda tell people how python works instead of giving the reasoning or context for the line of code.
+
+### Documentation Strings - docstring
+
+All public methods, modules, classes, and functions need a docustring describing what the item does.
+    """Performs Fast Modular Exponentiation
+    Further description if I had it to put here.
+    """
+
+One liner docstrings are okay for obvious methods.  Those are all in one line like so:
+    """Place key, value pair in Redis Cache"""
+
+These docstrings appear just after the function or class definition line.
+
+### Naming Conventions
+
+Names that pieces of a public API should reflect the usage, rather than the implementation.  Basically don't bog down the user for your API with unneccessary details and help them know *what* that thing does, not *how*.
+
+Be descriptive with naming.  I was told once that truly well-named APIs and code should not need comments.
+
+Don't use Capitalized_Words_With_Underscores. CamelCase is cool though and so is lower_case_with_underscores.  Abbreviations should be all caps like so: BSTSearch (bad example).
+
+_single_leading_underscore prevents "from newspaper import *" from importing those items.
+
+single_trailing_underscore_ is used to avoid conflicts with Python keywords, like String\_.
+
+__double_leading_underscore: Allows for name mangling when naming class attributes. Read more later on this.
+
+#### Package and Modules
+
+Modules need short, lowercase names and can have underscores used in them to improve readiblity.  Packages on the other hand should not have underscores, only lowercase letters.
+
+Extension modules in C or C++ should have a leading _underscore in the name.
+
+mixedCase is okay if the file is already in mixedCase.
+
+#### Classes
+
+Class names should use CamelCase.  Same goes for Exception names since they are Classes.
+
+#### Functions, Methods, & Instance Variables
+
+Use lowercase_with_underscores and _leading_underscore for private methods and instance variables.
+
+#### Constants
+
+ALL_UPPERCASE_WITH_UNDERSCORES
+
+### Function and method arguments
+
+Always self as the first argument in an instance method ( a method that pertains to an object).  Also use cls as the first argument in class methods.
+
+### Coding Recommendations
+
+#### Use Def statements not lambda
+
+    def triple(x): return 3*x
+
+Instead of:
+    triple = lambda x: 3*x
 
 # Java
 
