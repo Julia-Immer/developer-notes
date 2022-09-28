@@ -523,7 +523,7 @@ __double_leading_underscore: Allows for name mangling when naming class attribut
 
 #### Package and Modules
 
-Modules need short, lowercase names and can have underscores used in them to improve readiblity.  Packages on the other hand should not have underscores, only lowercase letters.
+Modules need short, lowercase names and can have underscores used in them to improve readiblity.  Packages/libraries on the other hand should not have underscores, only lowercase letters.
 
 Extension modules in C or C++ should have a leading _underscore in the name.
 
