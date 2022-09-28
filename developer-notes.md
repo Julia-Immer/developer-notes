@@ -554,6 +554,12 @@ Always self as the first argument in an instance method ( a method that pertains
 Instead of:
     triple = lambda x: 3*x
 
+## General Questions
+
+### What is the __pycache__ folder?
+
+When your python code is run, the python interpreter compiles it first into byte code and stores it in the \_\_pycache\_\_ folder.  The code makes running your program repeatedly faster.  However, if you are in testing or developement, sometimes not cleaning the cache will lead to the interpreter not realizing the files have changed and it will run old code without you knowing.
+
 # Java
 
 ## POJOs
