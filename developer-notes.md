@@ -554,7 +554,7 @@ Always self as the first argument in an instance method ( a method that pertains
 Instead of:
     triple = lambda x: 3*x
 
-## General Questions
+## General Python Questions
 
 ### What is the __pycache__ folder?
 
