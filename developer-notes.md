@@ -681,4 +681,4 @@ Current .zshrc:
 The installation of vscode is corrupt now.  I can't even backspace.  Matybe it will be fixed, the terminal , after reinstall.
 
 **Solution**
-Reinstalling and replacing VS Code fixed it.
+Reinstalling and replacing VS Code fixed the terminal.
