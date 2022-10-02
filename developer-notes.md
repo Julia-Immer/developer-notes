@@ -616,6 +616,9 @@ A service is made of projects, which are made of packages, which are made of cla
 -> part of syntax for lambda expressions. -> separates the parameters (left-side) from the implementation (right-side).
 (parameters) -> {Body}
 
+The lambda expression is as close as we get to a function being an object in Java.  If your lambda expression takes in only one parameter, you can omit the parenthesis around the parameter.  You can also omit the braces around the body if it consists of only one expression.  It is assumed that the expression is being returned so no return keyword is needed for singular statment lambda expressions.  Here are some examples:
+    
+
 ## Switch Statements
 
 **Example**
