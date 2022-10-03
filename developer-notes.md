@@ -617,7 +617,7 @@ A service is made of projects, which are made of packages, which are made of cla
 (parameters) -> {Body}
 
 The lambda expression is as close as we get to a function being an object in Java.  If your lambda expression takes in only one parameter, you can omit the parenthesis around the parameter.  You can also omit the braces around the body if it consists of only one expression.  It is assumed that the expression is being returned so no return keyword is needed for singular statment lambda expressions.  Here are some examples:
-    
+https://www.javatpoint.com/java-lambda-expressions
 
 ## Switch Statements
 
@@ -716,6 +716,10 @@ Download protocol for download speed test:
 **Generate Array of Random Bytes**
 byte[] bytes = new byte[20];
 SecureRandom.getInstanceStrong().nextBytes(bytes);
+
+## Java Math library
+
+The Math library is part of the standard library for java so you do not need to import it to call the functions and objects in it.  Simply reference the function or object with Math.Name.  Example: `int circumference = 2*Math.PI*radius`.  Math is a part of java.lang.
 
 # Maven
 
