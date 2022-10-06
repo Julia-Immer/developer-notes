@@ -5,6 +5,11 @@
 Include a relative link to a file:
     [a relative link](filepath)
 
+## Pictures
+
+To display a picture use:
+    ![a relative link](filepath)
+
 # Terminal / Bash
 
 In mac, at least, cmd + up arrow, takes you to the last command you did, so you can scroll through your history by command.
