@@ -814,5 +814,3 @@ The installation of vscode is corrupt now.  I can't even backspace.  Matybe it w
 
 **Solution**
 Reinstalling and replacing VS Code fixed the terminal.
-
-[def]: resources/IaaS-PaaS-SaaS.png
