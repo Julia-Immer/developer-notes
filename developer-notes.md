@@ -323,26 +323,56 @@ IAM users are not separate users but users that are a part of your root account.
 
 (Tasks that require root user credentials)[https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root]
 
+## AWS Regions
+
+For practice, the region closest to you is sufficient.  When selecting a region in an enterprise environment there are many factors to consider: pricing, load, compliance, latency, and services.  Some new services and features are only available in some regions.  To reduce latency or cost, the work-load can also be split across multiple regions.
+
 ## AWS CLI (command line interface) - Version 2
 
 An open source tool that let's you interact with AWS services using commands in your terminal.  The CLI can be set up with only a little configuration.
 You can also access it through CloudShell.
 
-**Finding the Version**
-    $ aws --version
-    aws-cli/2.8.3 Python/3.9.11 Darwin/21.6.0 exe/x86_64 prompt/off
-
 ### Configuring the CLI
 
 `$ aws configure`
 
-It prompts to enter the **aws access key**. Which are a pair (it prompts for public key first) and you can create a new pair inside the IAM console.  Once the box closes after their creation the secret key cannot be viewed again.
+This prompts you to enter the **aws access key**. Which are a pair (it prompts for public key first) and you can create a new pair inside the IAM console.  After their creation, when the box in the console closes the secret key cannot be viewed again.
 
-Region is whatever is closest to you but I left the rest of the options blank.
+The alias or account ID is the same for all the IAM users under your one root user's account.  The ID is a 12 digit number found inside each account.
 
-Currently can't find the alias or account id for the julia-immer IAM admin user I created.
+### Commands
 
+**Finding the Version**
+    $ aws --version
+    aws-cli/2.8.3 Python/3.9.11 Darwin/21.6.0 exe/x86_64 prompt/off
 
+#### IAM
+
+**Find out the alias to your current, working account**
+    $ aws iam list-account-aliases                
+    {
+        "AccountAliases": [
+            "root-ji"
+        ]
+    }
+
+**Find out which user is signed in to CLI**
+    $ aws iam get-user
+
+#### S3 Buckets
+
+**list all buckets**
+    $ aws s3 ls
+
+**moving, removing, and copying files**
+Use --exclude or --include to filter results. Example is immediately below.
+
+**Remove all of one type of file, or matching the provided regex pattern**
+    % aws s3 rm s3://practice-bucket1-root-ji --recursive --exclude "*" --include "*.jpg"
+    delete: s3://practice-bucket1-root-ji/147008004_1028711377539545_928341489216840378_n.jpg
+    delete: s3://practice-bucket1-root-ji/meme-be_careful_not_todehumanize.jpg
+
+The --exclude option has to be here or you will delete EVERYTHING.
 
 # Redis
 
