@@ -313,6 +313,37 @@ Here all software and services are provided and controlled by the cloud provider
 
 Public clouds are suitable for most users who do not need their data to be separated out and as highly secured as a private cloud.  Services are paid for on an as-needed basis and those resources are owned by the cloud provider.  Private clouds are separated out from all the public cloud computing.  Those private cloud resources belong to the user and are not used by others, as in the public cloud.  Think of public clouds as renting a car, and private clouds as buying a car.
 
+# AWS
+
+## Root vs IAM users
+
+Root user has access and full control of everything.  Do not use the Root user account for daily tasks.  It should be protected and only used when that level of administration is needed.
+You can make IAM users administrators so they can still do most every admin task needed.  IAM user's access can be controlled granularly. IAM stands for Identity and Access Management and is the suite of identity services Amazon offers.
+IAM users are not separate users but users that are a part of your root account.
+
+(Tasks that require root user credentials)[https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root]
+
+## AWS CLI (command line interface) - Version 2
+
+An open source tool that let's you interact with AWS services using commands in your terminal.  The CLI can be set up with only a little configuration.
+You can also access it through CloudShell.
+
+**Finding the Version**
+    $ aws --version
+    aws-cli/2.8.3 Python/3.9.11 Darwin/21.6.0 exe/x86_64 prompt/off
+
+### Configuring the CLI
+
+`$ aws configure`
+
+It prompts to enter the **aws access key**. Which are a pair (it prompts for public key first) and you can create a new pair inside the IAM console.  Once the box closes after their creation the secret key cannot be viewed again.
+
+Region is whatever is closest to you but I left the rest of the options blank.
+
+Currently can't find the alias or account id for the julia-immer IAM admin user I created.
+
+
+
 # Redis
 
 Redis is an In-Memory Database that provides very fast read, write, and search capabilities.  The database's information is stored inside the memory of the redis server and therefore offers much lower latency than if the data were on a disk (disk access is slow).  Multiple services can connect and utilize a Redis server simulataneously without issue.  Redis can automatically back up the data to disk if desired.  Then if the Redis server goes down, at least the data up and to that point persists.
