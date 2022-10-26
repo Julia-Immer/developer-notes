@@ -25,6 +25,11 @@ Make nested directories , folders :
 SUPER amazing Git tutorials and articles:
     <https://www.atlassian.com/git/tutorials>
 
+## How To Add Something To Gitignore
+
+**add .env file to .gitignore**
+    echo ".env" >> .gitignore
+
 ## Branch Tracking
 
     git branch -u origin/<branch>
@@ -669,6 +674,25 @@ A very beautiful switch statement: <https://github.com/bertrandmartel/speed-test
                     SpeedTestError.UNSUPPORTED_PROTOCOL,
                     "unsupported protocol");
             break;
+
+## Imports
+
+Imports happens at compile time so has no bearing on runtime in Java.  The packages imported are compiled into jvm bytecodes before runtime. It's best to use specific imports rather than the regex "*" which imports everything in the declared package.  
+Example of bad-practice import:
+    import java.util.*;
+
+Example of better import:
+    import java.util.Map;
+
+## Maps
+
+java.util.* contains the map interface through which you can create 3 different types of maps: HashMap, LinkedHashMap, TreeMap. A TreeMap is a sorted map
+
+To create a new HashMap object:
+    Map<String, Integer> myMap = new HashMap<String, Integer>();
+
+To create a new map and add multiple items at once use:
+    Map<String, Integer> myMap = Map.of("juice", 500, "mashed potatoes", 600, "salad", 400);
 
 ## Files
 
