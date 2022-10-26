@@ -296,6 +296,89 @@ The two ways to configure a pod to use a ConfigMap are:
 **What is hostPort and hostIP?**
 <https://stackoverflow.com/questions/63691946/kubernetes-what-is-hostport-and-hostip-used-for>
 
+# Cloud Computing
+
+## Types of Service Models
+
+### IaaS - Infrastructure as a Service
+
+If a business needs a Virtual Machine, then IaaS is the way to go.  This provides compute, data, and network resources to the user in a pay-as-you-go model.  The company or entity using the IaaS handles all of their deployment and allocation needs and the cloud provider supplies the bare resources.  Users: IT Professionals
+
+### PaaS - Platform as a Service
+
+Runtime environments and cloud platforms are provided for users, usually developers, to develop, test, deploy, and manage their environments.  Software engineers can deploy their applications without needing to directly spin up new servers and other IT services.
+
+### SaaS - Software as a Service
+
+Here all software and services are provided and controlled by the cloud provider.  Users pay for access to software such as Microsoft Excel, Gmail, Google Drive, etc.  No IT or software maintenence is required.
+
+![Differences between IaaS, PaaS, and SaaS from Simplilearn](resources/IaaS-PaaS-SaaS.png)
+
+### Private, Hybrid, and Public Clouds
+
+Public clouds are suitable for most users who do not need their data to be separated out and as highly secured as a private cloud.  Services are paid for on an as-needed basis and those resources are owned by the cloud provider.  Private clouds are separated out from all the public cloud computing.  Those private cloud resources belong to the user and are not used by others, as in the public cloud.  Think of public clouds as renting a car, and private clouds as buying a car.
+
+# AWS
+
+## Root vs IAM users
+
+Root user has access and full control of everything.  Do not use the Root user account for daily tasks.  It should be protected and only used when that level of administration is needed.
+You can make IAM users administrators so they can still do most every admin task needed.  IAM user's access can be controlled granularly. IAM stands for Identity and Access Management and is the suite of identity services Amazon offers.
+IAM users are not separate users but users that are a part of your root account.
+
+(Tasks that require root user credentials)[https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root]
+
+## AWS Regions
+
+For practice, the region closest to you is sufficient.  When selecting a region in an enterprise environment there are many factors to consider: pricing, load, compliance, latency, and services.  Some new services and features are only available in some regions.  To reduce latency or cost, the work-load can also be split across multiple regions.
+
+## AWS CLI (command line interface) - Version 2
+
+An open source tool that let's you interact with AWS services using commands in your terminal.  The CLI can be set up with only a little configuration.
+You can also access it through CloudShell.
+
+### Configuring the CLI
+
+`$ aws configure`
+
+This prompts you to enter the **aws access key**. Which are a pair (it prompts for public key first) and you can create a new pair inside the IAM console.  After their creation, when the box in the console closes the secret key cannot be viewed again.
+
+The alias or account ID is the same for all the IAM users under your one root user's account.  The ID is a 12 digit number found inside each account.
+
+### Commands
+
+**Finding the Version**
+    $ aws --version
+    aws-cli/2.8.3 Python/3.9.11 Darwin/21.6.0 exe/x86_64 prompt/off
+
+#### IAM
+
+**Find out the alias to your current, working account**
+    $ aws iam list-account-aliases                
+    {
+        "AccountAliases": [
+            "root-ji"
+        ]
+    }
+
+**Find out which user is signed in to CLI**
+    $ aws iam get-user
+
+#### S3 Buckets
+
+**list all buckets**
+    $ aws s3 ls
+
+**moving, removing, and copying files**
+Use --exclude or --include to filter results. Example is immediately below.
+
+**Remove all of one type of file, or matching the provided regex pattern**
+    % aws s3 rm s3://practice-bucket1-root-ji --recursive --exclude "*" --include "*.jpg"
+    delete: s3://practice-bucket1-root-ji/147008004_1028711377539545_928341489216840378_n.jpg
+    delete: s3://practice-bucket1-root-ji/meme-be_careful_not_todehumanize.jpg
+
+The --exclude option has to be here or you will delete EVERYTHING.
+
 # Redis
 
 Redis is an In-Memory Database that provides very fast read, write, and search capabilities.  The database's information is stored inside the memory of the redis server and therefore offers much lower latency than if the data were on a disk (disk access is slow).  Multiple services can connect and utilize a Redis server simulataneously without issue.  Redis can automatically back up the data to disk if desired.  Then if the Redis server goes down, at least the data up and to that point persists.
@@ -415,7 +498,7 @@ I am still figuring out where to put the dependency to make it work but believe 
 **Mocking the Jedis Connection**
 At start of service inject IP address and port.  Mockito will mock the jedis connection.
 
-# User Groups
+# User Groups on linux
 
 To see all the groups you have available:
     groups
@@ -429,7 +512,6 @@ To find out your primary group membership:
 To see all the users in a group (this one is looking at the docker group):
     grep /etc/group -e "docker"
 
-# UDEV
 
 Problem(s):
     [scottj@b71-int-7002 /opt/scottj/workspace/heimdall-wikis (main)]$ git pull
