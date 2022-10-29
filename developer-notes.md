@@ -30,6 +30,9 @@ SUPER amazing Git tutorials and articles:
 **add .env file to .gitignore**
     echo ".env" >> .gitignore
 
+**add all of one type of file to .gitignore**
+    echo "*.DS_Store" >> .gitignore
+
 ## Branch Tracking
 
     git branch -u origin/<branch>
@@ -654,6 +657,10 @@ When your python code is run, the python interpreter compiles it first into byte
 
 # Java
 
+## Static Classes
+
+A static class can be nested inside another class.  A static class cannot be an outer class in java, however.  Static classes can be instantiated without instantiating an object of the top-level class it is nested in.  Objects of the static class can access all the static methods and variables in the non-static outer class.  They cannot however access the non-static variables and methods.  You need an outer-class object to do that.  
+
 ## POJOs
 
 A "plain old java object", known as a pojo is a simple object class in java and it may or may not follow any standard naming conventions, access methods, or implementation styles.  The point is that it is a basic java object, plain and simple.
@@ -759,7 +766,7 @@ A very beautiful switch statement: <https://github.com/bertrandmartel/speed-test
 
 ## Imports
 
-Imports happens at compile time so has no bearing on runtime in Java.  The packages imported are compiled into jvm bytecodes before runtime. It's best to use specific imports rather than the regex "*" which imports everything in the declared package.  
+Imports happen at compile time so has no bearing on runtime in Java.  The packages imported are compiled into jvm bytecodes before runtime. It's best to use specific imports rather than the regex "*" which imports everything in the declared package.  
 Example of bad-practice import:
     import java.util.*;
 
@@ -776,10 +783,18 @@ To create a new HashMap object:
 To create a new map and add multiple items at once use:
     Map<String, Integer> myMap = Map.of("juice", 500, "mashed potatoes", 600, "salad", 400);
 
+## Strings
+
+Java strings are immutable.  They are essentially arrays of chars.
+
+string length:
+    int len = "Hello".length();
+
 ## Files
 
 **WOW in-depth tut that helped me with under the hood Path and File stuff:**
 <https://golb.hplar.ch/2017/09/Pluggable-file-systems-in-Java.html>
+
 
 ### java.io.File
 
