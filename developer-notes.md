@@ -851,8 +851,27 @@ The Math library is part of the standard library for java so you do not need to 
 
 **Changing the version of your project, via maven command**
 Change version from 2.0.0 to 2.1.0:
-    mvn versions:set -DgroupId=org.apache.maven.*-DartifactId=* -DoldVersion=2.* -DnewVersion=2.1.0-SNAPSHOT
+    mvn versions:set -DgroupId=org.apache.maven.* -DartifactId=* -DoldVersion=2.* -DnewVersion=2.1.0-SNAPSHOT
 <https://www.mojohaus.org/versions-maven-plugin/examples/set.html>
+
+## Properties
+
+### groupId
+
+The value used to identify all of your packages accross all projects. For me, I chose is Julia-Immer, since that is my github handle.
+
+### artifactId
+
+The final name of the immediate project you are bundling up.
+  Final name ends up: artifactId + version + ".jar"
+
+### package
+
+If your current project is part of a larger package, you would use that umbrella package name here.
+
+### version
+
+SNAPSHOT being in the version is significant for maven, as it tells maven which jar to use when compiling and running tests.  I believe...
 
 # Quarkus
 
