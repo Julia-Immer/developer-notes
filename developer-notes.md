@@ -10,7 +10,7 @@ Include a relative link to a file:
 To display a picture use:
     ![a relative link](filepath)
 
-# Terminal / Bash
+# Terminal / zsh
 
 In mac, at least, cmd + up arrow, takes you to the last command you did, so you can scroll through your history by command.
 
@@ -19,6 +19,23 @@ How to stop a command in terminal (or a program in linux?):
 
 Make nested directories , folders :
     mkdir -p bits/fade/edge/bandwidth/server/
+
+## vi Editor
+
+**How to uncomment a text block**
+Hit Esc
+ctrl + v
+use arrows to select above and below and left or right
+hit x to delete
+
+**How to undo something in vi/vim**
+Hit Esc
+hit u
+
+you can use quatifiers to udo multiple changes like this:
+3u
+
+3 is used in front to undo last 3 changes.
 
 # Git
 
