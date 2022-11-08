@@ -3,7 +3,7 @@
 ## Links (files, url)
 
 Include a relative link to a file:
-    [a relative link](filepath)
+    [a relative link](filepath/url)
 
 ## Pictures
 
@@ -20,7 +20,35 @@ How to stop a command in terminal (or a program in linux?):
 Make nested directories , folders :
     mkdir -p bits/fade/edge/bandwidth/server/
 
+**Information about /usr/ /bin/ /dev/ /lib/ etc in the MacOS filesystem**
+A historical sketch of the filesystem hierarchy.  The modern OS X filesystem is documented in the “File System Programming Guide” available on Apple Developer.
+    man heir
+
+## which
+
+which – locate a program file in the user's path.
+
+List all executables, not just the first found, for program:
+    which -a [program]
+
+## whereis
+
+Similar to which but searches the standard binary as well as manual page directories for program, printing out all paths as it goes.
+
+## PATH
+
+[My PATHs are a mess... How to clean up + very useful commands](https://towardsdatascience.com/my-path-variable-is-a-mess-e52f22bfa520#:~:text=If%20you%20are%20a%20ZSH%20user%20and%20there,UNIX%2C%20you%20can%20add%20multiple%20PATHs%20using%20colons%3A)
+
+
+
 ## vi Editor
+
+**How to comment out a text block**
+Hit ctrl + v
+select lines
+shift + i (takes you to insert mode)
+Type comment characters
+Hit esc
 
 **How to uncomment a text block**
 Hit Esc
