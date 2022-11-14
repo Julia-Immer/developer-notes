@@ -546,7 +546,20 @@ I am still figuring out where to put the dependency to make it work but believe 
 **Mocking the Jedis Connection**
 At start of service inject IP address and port.  Mockito will mock the jedis connection.
 
-# User Groups on linux
+# Linux
+
+## Families of Linux
+
+**Red Hat Family** - Red Hat Enterprise Linux (RHEL), Fedora, CentOS, CentOS Stream, and Oracle Linux.
+Uses yum and dnf package managers.
+
+**SUSE Family** - SUSE, SUSE Enterprise Linux Server (SLES), openSUSE.
+Uses RPM-based zypper package manager.
+
+**Debian Family** - Debian, Ubuntu, Linux Mint
+Uses DPKG-based package manager: apt, apt-get etc
+
+## User Groups on linux (REHL)
 
 To see all the groups you have available:
     groups
