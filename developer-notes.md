@@ -78,6 +78,10 @@ SUPER amazing Git tutorials and articles:
 **add all of one type of file to .gitignore**
     echo "*.DS_Store" >> .gitignore
 
+## Get rid of all your changes in a file
+
+    git checkout filename.ext
+
 ## Branch Tracking
 
     git branch -u origin/<branch>
@@ -126,7 +130,7 @@ If it prints a remote, it's tracking something. If it prints nothing and returns
 
 ## Creating A New Repo
 
-When creating a repo with github desktop, it generates a new folder of that name to house the repo. So if you want your repo called "resume" and you tell it to generate the repo inside your "resume" folder, inside your workspace, then the path will be ".../workspace/resume/resume".  Yes I did this.
+When creating a repo with github desktop, it generates a new folder of that name to house the repo. So if you want your repo called "resume" and you tell it to generate the repo inside your "resume" folder, inside your workspace, then the path will be "../workspace/resume/resume"
 
 # Deployment
 
