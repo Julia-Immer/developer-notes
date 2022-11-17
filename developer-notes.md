@@ -594,6 +594,11 @@ Reason this happened:
 
 # Python
 
+## Stings
+
+String slicing:
+    s[start:finish] # does not include finish element
+
 ## Pep8
 
 ### Imports
