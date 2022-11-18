@@ -10,11 +10,11 @@ Include a relative link to a file:
 To display a picture use:
     ![a relative link](filepath)
 
-# Terminal / zsh
+# Terminal / zsh / bash
 
 In mac, cmd + up arrow, takes you to the last command you did, so you can scroll through your history by command.
 
-How to stop a command in terminal (or a program in linux?):
+How to stop a command in terminal (or a program in rhel):
     Ctrl+C
 
 Make nested directories , folders :
@@ -39,7 +39,65 @@ Similar to which but searches the standard binary as well as manual page directo
 
 [My PATHs are a mess... How to clean up + very useful commands](https://towardsdatascience.com/my-path-variable-is-a-mess-e52f22bfa520#:~:text=If%20you%20are%20a%20ZSH%20user%20and%20there,UNIX%2C%20you%20can%20add%20multiple%20PATHs%20using%20colons%3A)
 
+# Regex
 
+### \w
+Any latin letter or digit
+### \d 
+Any decimal digit
+### .
+Any character
+### [01]
+Either 0 or 1
+#### Search "bananna"
+    bananna
+#### Search for any word like: bat, bot, bet, bit, but - of any length
+    b[aeiou]t
+#### Search for any word following b_t pattern, where the _ is any digit
+    b[\w]t
+
+
+# Linux
+
+## Families of Linux
+
+**Red Hat Family** - Red Hat Enterprise Linux (RHEL), Fedora, CentOS, CentOS Stream, and Oracle Linux.
+Uses yum and dnf package managers.
+
+**SUSE Family** - SUSE, SUSE Linux Enterprise Server (SLES), openSUSE.
+Uses RPM-based zypper package manager.
+
+**Debian Family** - Debian, Ubuntu, Linux Mint
+Uses DPKG-based package manager: apt, apt-get etc. GNOME-based.
+
+## User Groups on linux (REHL)
+
+To see all the groups you have available:
+    groups
+
+To see the groups you have membership of as the root user:
+    groups root
+
+To find out your primary group membership:
+    $ getent group userName
+
+To see all the users in a group (this one is looking at the docker group):
+    grep /etc/group -e "docker"
+
+
+Problem(s):
+    [scottj@b71-int-7002 /opt/scottj/workspace/heimdall-wikis (main)]$ git pull
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    Permissions 0777 for ‘/home/scottj/.ssh/id_rsa’ are too open.
+    It is required that your private key files are NOT accessible by others.
+    This private key will be ignored.
+    Load key “/home/scottj/.ssh/id_rsa”: bad permissions
+
+Reason this happened:
+    I had modified the users on my udev machine when trying to add myself to the docker user group.  They went in and fixed that but then my profile permissions were still unlocked.  To fix it, I did:
+        chmod 400 /home/scottj/.ssh/id_rsa
 
 ## vi Editor
 
@@ -131,6 +189,18 @@ If it prints a remote, it's tracking something. If it prints nothing and returns
 ## Creating A New Repo
 
 When creating a repo with github desktop, it generates a new folder of that name to house the repo. So if you want your repo called "resume" and you tell it to generate the repo inside your "resume" folder, inside your workspace, then the path will be "../workspace/resume/resume"
+
+# HTTP and HTTPS
+
+HTTP is a clearly application protocol that allows the exchange of files on the internet.  It allows web browsers to send requests to web servers and receive and interpret responses.  It operates over the TCP/IP (Transmission Control/ Internet protocol) and QUIC protocols.
+
+HTTPS is HTTP but has SSL a (secure socket layer) added so that the information being transmitted is encrypted.
+
+## HTTP Proxys
+
+An HTTP proxy server acts an intermediarary between the HTTP client and HTTP servers.  Some of the purposes this could serve are speeding up request/response time by filtering requests, protecting the client's IP address, or protecting the main servers from various cyber threats via bad requests.
+
+
 
 # Deployment
 
@@ -550,47 +620,6 @@ I am still figuring out where to put the dependency to make it work but believe 
 **Mocking the Jedis Connection**
 At start of service inject IP address and port.  Mockito will mock the jedis connection.
 
-# Linux
-
-## Families of Linux
-
-**Red Hat Family** - Red Hat Enterprise Linux (RHEL), Fedora, CentOS, CentOS Stream, and Oracle Linux.
-Uses yum and dnf package managers.
-
-**SUSE Family** - SUSE, SUSE Linux Enterprise Server (SLES), openSUSE.
-Uses RPM-based zypper package manager.
-
-**Debian Family** - Debian, Ubuntu, Linux Mint
-Uses DPKG-based package manager: apt, apt-get etc. GNOME-based.
-
-## User Groups on linux (REHL)
-
-To see all the groups you have available:
-    groups
-
-To see the groups you have membership of as the root user:
-    groups root
-
-To find out your primary group membership:
-    $ getent group userName
-
-To see all the users in a group (this one is looking at the docker group):
-    grep /etc/group -e "docker"
-
-
-Problem(s):
-    [scottj@b71-int-7002 /opt/scottj/workspace/heimdall-wikis (main)]$ git pull
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    Permissions 0777 for ‘/home/scottj/.ssh/id_rsa’ are too open.
-    It is required that your private key files are NOT accessible by others.
-    This private key will be ignored.
-    Load key “/home/scottj/.ssh/id_rsa”: bad permissions
-
-Reason this happened:
-    I had modified the users on my udev machine when trying to add myself to the docker user group.  They went in and fixed that but then my profile permissions were still unlocked.  To fix it, I did:
-        chmod 400 /home/scottj/.ssh/id_rsa
 
 # Python
 
