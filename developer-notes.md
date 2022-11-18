@@ -553,11 +553,11 @@ At start of service inject IP address and port.  Mockito will mock the jedis con
 **Red Hat Family** - Red Hat Enterprise Linux (RHEL), Fedora, CentOS, CentOS Stream, and Oracle Linux.
 Uses yum and dnf package managers.
 
-**SUSE Family** - SUSE, SUSE Enterprise Linux Server (SLES), openSUSE.
+**SUSE Family** - SUSE, SUSE Linux Enterprise Server (SLES), openSUSE.
 Uses RPM-based zypper package manager.
 
 **Debian Family** - Debian, Ubuntu, Linux Mint
-Uses DPKG-based package manager: apt, apt-get etc
+Uses DPKG-based package manager: apt, apt-get etc. GNOME-based.
 
 ## User Groups on linux (REHL)
 
