@@ -12,7 +12,7 @@ To display a picture use:
 
 # Terminal / zsh
 
-In mac, at least, cmd + up arrow, takes you to the last command you did, so you can scroll through your history by command.
+In mac, cmd + up arrow, takes you to the last command you did, so you can scroll through your history by command.
 
 How to stop a command in terminal (or a program in linux?):
     Ctrl+C
