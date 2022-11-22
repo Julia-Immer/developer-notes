@@ -41,6 +41,8 @@ Similar to which but searches the standard binary as well as manual page directo
 
 # Regex
 
+Playground for testing: https://regex101.com/
+
 ### \w
 Any latin letter or digit
 ### \d 
@@ -48,13 +50,24 @@ Any decimal digit
 ### .
 Any character
 ### [01]
-Either 0 or 1
+Either 0 or 1 - matches w/ one of the items listed between []
+### *
+Matches zero or more of preceding character
+
 #### Search "bananna"
     bananna
+#### Search for any number of n's in a row
+    n*
+This matches with "n" and "nn" in "bananna".
+
 #### Search for any word like: bat, bot, bet, bit, but - of any length
     b[aeiou]t
 #### Search for any word following b_t pattern, where the _ is any digit
     b[\w]t
+#### Any string of the form: digit char digit
+    \d.\d
+#### Find digits of any length
+    \d\d*
 
 
 # Linux
