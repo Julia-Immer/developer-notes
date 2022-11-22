@@ -357,7 +357,32 @@ Stopping/deleting all minikube clusters:
 
 # Kubernetes
 
+- High availability or no downtime
+- Scalability or high performance - it automatically adjusts to work load
+- Disaster recovery - when things go down, we can get them back - backup and restore
+- Made of *at least* 1 master node and a couple worker nodes. Each worker node has a kublet process running on it. 
+
 Kubernetes allows you to run your applications remotely and scale up your services automatically as your demand grows, or automatically redeploy and replace a service node if one dies.  Once you have a cluster, the Kubernetes Deployment Controller watches your Kubernetes cluster and repairs nodes if they break, or replaces them when they die.  The Controller uses the configmaps of your service to deploy and redeploy your service.  The deployment configuration gives kubernetes instructions on how to redeploy your service.
+
+Kublet is a kubernetes process that makes it possible for the cluster to talk to itself and for tasks to be executed on worker nodes.
+Master node runs processes that are critical to cluster managment.  One such is the API Server which is what you talk to the cluster through.  This includes the CLI and the APIs that are the entry-points into the cluster.
+
+Another running on the master node is the Scheduler, which decides which worker node the next job should be run on.
+
+On the master node there is also a ETCD, backup store, which takes snapshots of the cluster state so if anything goes wrong, the cluster can restore itself to a former state.  If you lose your master node, you lose all access to your cluster, so often they have multiple master nodes, or backups of the node, so it can be restored if something goes wrong with the master.
+
+The master node itself is a container running.  And also inbedded in the cluster is the virtual network, which allows the cluster's nodes to communicate and functiton as one, powerful computer.  Usually the worker nodes are much bigger and require more resources than the master node(s) because they are the ones running the applications.
+
+Each pod, the smallest unit in kubernetes, runs one application.  Each pod has a unique IP address which can be used to access it.  However that unique IP vanishes if the pod dies which is why you can give them a service IP address which is permanent.  The IP given by the Service IP is often messy however which is where Ingress comes in.  Kubernetes uses Ingress to alias and route requests in. So you can turn: http://127.9.0.101:7070 into http://my-app/
+
+## Volume
+
+Since kubernetes revolves around easily replicating and replacing pods if they die, if you running a database there, you could easily lose your data if its pod dies.  For this reason Kubernetes lets you attach a volume to pods to backup data.  Using volumes, kubernetes attaches physical, hard-drive storage to your pods.  This can be on the same machine the pod is running on, or a remote server outside the cluster.
+
+## Deployment and Stateful Set
+
+Kubernetes is all about replicability
+
 
 Cheat Sheet: <https://kubernetes.io/docs/reference/kubectl/cheatsheet/>
 
