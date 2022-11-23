@@ -69,6 +69,10 @@ This matches with "n" and "nn" in "bananna".
 #### Find digits of any length
     \d\d*
 
+## grep
+
+Searches for regex pattern in item specified (file, string, directory).
+    grep [options] pattern [item to be searched]
 
 # Linux
 
@@ -379,9 +383,15 @@ Each pod, the smallest unit in kubernetes, runs one application.  Each pod has a
 
 Since kubernetes revolves around easily replicating and replacing pods if they die, if you running a database there, you could easily lose your data if its pod dies.  For this reason Kubernetes lets you attach a volume to pods to backup data.  Using volumes, kubernetes attaches physical, hard-drive storage to your pods.  This can be on the same machine the pod is running on, or a remote server outside the cluster.
 
-## Deployment and Stateful Set
+## Deployments and Stateful Set
 
-Kubernetes is all about replicability
+Kubernetes is all about replicability.  Usually in production you would have replicas of an app running on different nodes, on different servers, that way if one goes down you have another running in already to replace it.  The service would connect these, routing requests through the service IP address and DNS. This is how the service is a load balancer.  It routes requests between the various app replicas to distribute them efficiently.
+
+Deployments not pods:  Kubernetes users and admins work with deployments, which specify how many replicas you need.  Deployments are used to create pods, rather than a person hand creating each pod.
+
+For a database however, all the pods running it need a mechanism for connecting which is why it's important to use stateful set to create them, not deployments. Statefulsets are for anything that requires to maintain its state including stateful apps.  It's much harder to set up statefulsets in kubernetes though which is why DBs are usually housed outside a Kubernetes cluster.
+
+
 
 
 Cheat Sheet: <https://kubernetes.io/docs/reference/kubectl/cheatsheet/>
