@@ -10,6 +10,73 @@ Include a relative link to a file:
 To display a picture use:
     ![a relative link](filepath)
 
+# Git
+
+SUPER amazing Git tutorials and articles:
+    <https://www.atlassian.com/git/tutorials>
+
+## How To Add Something To Gitignore
+
+**add .env file to .gitignore**
+    echo ".env" >> .gitignore
+
+**add all of one type of file to .gitignore**
+    echo "*.DS_Store" >> .gitignore
+
+## Get rid of all your changes in a file
+
+    git checkout filename.ext
+
+## Branch Tracking
+
+    git branch -u origin/<branch>
+
+## Updating Your Feature Branch With Changes From Main
+
+There's two main strategies for this:
+    1. Rebase on main
+    2. Merge main into your feature branch
+
+### Merging Main Into Feature Branches
+
+    git checkout main
+    git pull
+    git checkout feature-branch
+    git merge main
+    git push
+
+### Rebasing
+
+**How do you get the new changes from main into your feature branch (in the event your branch is very out of date)?**
+    git checkout feature-branch
+    git rebase main
+
+    If you have already published your feature branch to remote then:
+       git pull --rebase
+
+    Info:
+    https://stackoverflow.com/questions/42861353/git-pull-after-git-rebase
+
+**I’m having some weird git issues [git was rejecting pushes of feature2] and now it is clear this is because my two feature branches on the heimdall-client are set to track different things.  One is set to track the remote version of the branch and the other is set to track main.
+Which should we set our branches to track?  RN it is like this:
+    feature1 tracks remote feature1
+    feature2 tracks remote main**
+
+Answer: both branches should track the remote version of themselves.  feature2 should track origin/feature2.
+
+To see what your local branches are tracking use:
+    git branch -vv
+
+To see what a single branch is tracking:
+    git config --get branch.[branch].remote
+
+If it prints a remote, it's tracking something. If it prints nothing and returns failure, it's not.
+    A :  Both branches should track the remote versions of themselves.  feature2 tracks remote feature2, known as origin/feature2
+
+## Creating A New Repo
+
+When creating a repo with github desktop, it generates a new folder of that name to house the repo. So if you want your repo called "resume" and you tell it to generate the repo inside your "resume" folder, inside your workspace, then the path will be "../workspace/resume/resume"
+
 # Terminal / zsh / bash
 
 In mac, cmd + up arrow, takes you to the last command you did, so you can scroll through your history by command.
@@ -140,73 +207,6 @@ you can use quatifiers to udo multiple changes like this:
 
 3 is used in front to undo last 3 changes.
 
-# Git
-
-SUPER amazing Git tutorials and articles:
-    <https://www.atlassian.com/git/tutorials>
-
-## How To Add Something To Gitignore
-
-**add .env file to .gitignore**
-    echo ".env" >> .gitignore
-
-**add all of one type of file to .gitignore**
-    echo "*.DS_Store" >> .gitignore
-
-## Get rid of all your changes in a file
-
-    git checkout filename.ext
-
-## Branch Tracking
-
-    git branch -u origin/<branch>
-
-## Updating Your Feature Branch With Changes From Main
-
-There's two main strategies for this:
-    1. Rebase on main
-    2. Merge main into your feature branch
-
-### Merging Main Into Feature Branches
-
-    git checkout main
-    git pull
-    git checkout feature-branch
-    git merge main
-    git push
-
-### Rebasing
-
-**How do you get the new changes from main into your feature branch (in the event your branch is very out of date)?**
-    git checkout feature-branch
-    git rebase main
-
-    If you have already published your feature branch to remote then:
-       git pull --rebase
-
-    Info:
-    https://stackoverflow.com/questions/42861353/git-pull-after-git-rebase
-
-**I’m having some weird git issues [git was rejecting pushes of feature2] and now it is clear this is because my two feature branches on the heimdall-client are set to track different things.  One is set to track the remote version of the branch and the other is set to track main.
-Which should we set our branches to track?  RN it is like this:
-    feature1 tracks remote feature1
-    feature2 tracks remote main**
-
-Answer: both branches should track the remote version of themselves.  feature2 should track origin/feature2.
-
-To see what your local branches are tracking use:
-    git branch -vv
-
-To see what a single branch is tracking:
-    git config --get branch.[branch].remote
-
-If it prints a remote, it's tracking something. If it prints nothing and returns failure, it's not.
-    A :  Both branches should track the remote versions of themselves.  feature2 tracks remote feature2, known as origin/feature2
-
-## Creating A New Repo
-
-When creating a repo with github desktop, it generates a new folder of that name to house the repo. So if you want your repo called "resume" and you tell it to generate the repo inside your "resume" folder, inside your workspace, then the path will be "../workspace/resume/resume"
-
 # HTTP and HTTPS
 
 HTTP is a clearly application protocol that allows the exchange of files on the internet.  It allows web browsers to send requests to web servers and receive and interpret responses.  It operates over the TCP/IP (Transmission Control/ Internet protocol) and QUIC protocols.
@@ -216,7 +216,6 @@ HTTPS is HTTP but has SSL a (secure socket layer) added so that the information 
 ## HTTP Proxys
 
 An HTTP proxy server acts an intermediarary between the HTTP client and HTTP servers.  Some of the purposes this could serve are speeding up request/response time by filtering requests, protecting the client's IP address, or protecting the main servers from various cyber threats via bad requests.
-
 
 
 # Deployment
@@ -487,6 +486,35 @@ Here all software and services are provided and controlled by the cloud provider
 ### Private, Hybrid, and Public Clouds
 
 Public clouds are suitable for most users who do not need their data to be separated out and as highly secured as a private cloud.  Services are paid for on an as-needed basis and those resources are owned by the cloud provider.  Private clouds are separated out from all the public cloud computing.  Those private cloud resources belong to the user and are not used by others, as in the public cloud.  Think of public clouds as renting a car, and private clouds as buying a car.
+
+## Cloud Native
+
+Cloud native architecture qualities:
+    **Automation** - using testing, CI/CD, git, and other such tools to automate the dev/test/deployment cycle. This could also be automating mantinence or deployment of infrastructure resources. 
+    **Self-healing** - infrastructure and apps includes health checks so they can tell if they have stopped working. When these apps or infrastructure resources fail, there is software or scripts to there to automatically redeploy those resources.
+    **Scalability** - methods or tools that allow applications and processess to scale automatically.
+    **Cost Efficient** - not only do they scale up, they scale down easily and automatically, making it cheaper to operate.
+    **Easy to Maintain** - breaking an application into many smaller, single responsibility microservices, allows for work to be spread across teams and updates to be more easily and quickly integrated.  Also makes testing easier.
+    **Secure by Default** - using patterns like zero trust computing. Meshes instead of zones?
+
+
+### The Twelve-Factor App: Guidline for cloud applications
+
+https://12factor.net/
+
+### AutoScaling
+
+Auto-scaling is the dynamic allocation and pruning of resources in response to demand. Kubernetes offers fully automated auto-scaling.
+
+#### Horizontal Scaling
+
+Spawning new instances of an application, allocating more physical servers, and creating more virtual machines are a few examples of horizontal scaling.  This might be creating more kubernetes clusters, more nodes on clusters, or more instances of an application. 
+
+#### Vertical Scaling
+
+Instead of pulling in more server racks to distribute the load across as in horizontal scaling, vertical scaling is increasing the compute power of the servers you are currently using.  Virtual machines and processes can be scaled up by increasing the amount of cpu they have access to.  The upper limit is the physical machines processes are being run on.
+
+
 
 # AWS
 
