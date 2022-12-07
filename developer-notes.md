@@ -514,6 +514,31 @@ Spawning new instances of an application, allocating more physical servers, and 
 
 Instead of pulling in more server racks to distribute the load across as in horizontal scaling, vertical scaling is increasing the compute power of the servers you are currently using.  Virtual machines and processes can be scaled up by increasing the amount of cpu they have access to.  The upper limit is the physical machines processes are being run on.
 
+**Configuring Scaling** - Configuring scaling involves setting a maximum and minimum of instances, as well as what triggers scaling.
+
+### Serverless Computing
+
+In most other cloud computing models, before an application could be deployed, the infrastructure or development team would need to prepare several resources like networks, load balancers, VMs and operating systems.  These would be needed for even a simple web app.
+
+Instead of managing all those infrastructure and system elements, "serverless" computing lets you simply give the cloud provider your application or script and it determines automatically what resources are needed and allocates them.  Servers are indeed involved but the cloud provider chooses and allocates them.  All cloud providers offer serverless runtimes.
+
+Serverless is sometimes called FaaS (Function as a Service).  Often instead of a company only using serverless systems, they are used in addition to container orchestration and or more traditional IT tools like VMs.  
+
+Small stateless scripts like business logic, events, scheduled tasks and batch processing, is perfect for serverless.
+
+### Open Container Initiative
+
+An open-source organization subset of Linux Foundation that sets standards for container technology.
+
+### Containers
+
+**Why Containers?**
+Before containers, the most efficient way to run applications was to spin up virtual machines.  Because these virtual machines however simulate all the parts of a computer, including the kernel of the operating system, they come with a lot of overhead.  Containers solve this problem.
+
+#### chroot
+
+The oldest version of container-like tecnology was the `chroot` command which isolates a process at a particular location from all the other files in the system.  At the location where it is called, a virtual root filesystem is spawned there in the effective chroot jail, locked out from the external files.
+
 
 
 # AWS
