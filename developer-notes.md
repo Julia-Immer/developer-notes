@@ -535,11 +535,27 @@ An open-source organization subset of Linux Foundation that sets standards for c
 **Why Containers?**
 Before containers, the most efficient way to run applications was to spin up virtual machines.  Because these virtual machines however simulate all the parts of a computer, including the kernel of the operating system, they come with a lot of overhead.  Containers solve this problem.
 
-#### chroot
+Before containers, system administrators needed to install all the dependencies by hand for a program, making sure all configurations of the network and OS are right for the app.  Containers make is so you easily can specify those dependcy and configuration needs, and the container takes care of it.
+
+#### chroot and Isolating Processes
 
 The oldest version of container-like tecnology was the `chroot` command which isolates a process at a particular location from all the other files in the system.  At the location where it is called, a virtual root filesystem is spawned there in the effective chroot jail, locked out from the external files.
 
+Namespaces and cgroups are used in linux to isolate processes and resources even more than chroot can.  Namespaces can be used to isolate resources like a network.
 
+Linux Kernel 5.6 has the following namespaces:
+    pid - process ID
+    net - allows processes to have their own network, including IP address
+    mnt - abstracts the filesystem view and manages mount points
+    ipc - inter-process communication provides a seperation for named, shared memory segments
+    user - gives a process its own set of user IDs and group IDs
+    uts - unix time sharing can give processes a hostname and domain name
+    cgroup - allows a process to have its own set of cgroup root directories
+    time - virtualizes the clock of the system
+
+Under the hood in docker, namespaces like these are used to isolate the container processes from the rest of the system.
+
+Virtual machines have more overhead than containers because containers are only processes, whereas for a VM you need to simulate all parts of a computer and run an entire operating system.
 
 # AWS
 
