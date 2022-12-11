@@ -217,6 +217,133 @@ HTTPS is HTTP but has SSL a (secure socket layer) added so that the information 
 
 An HTTP proxy server acts an intermediarary between the HTTP client and HTTP servers.  Some of the purposes this could serve are speeding up request/response time by filtering requests, protecting the client's IP address, or protecting the main servers from various cyber threats via bad requests.
 
+# Cloud Computing
+
+## Types of Service Models
+
+### IaaS - Infrastructure as a Service
+
+If a business needs a Virtual Machine, then IaaS is the way to go.  This provides compute, data, and network resources to the user in a pay-as-you-go model.  The company or entity using the IaaS handles all of their deployment and allocation needs and the cloud provider supplies the bare resources.  Users: IT Professionals
+
+### PaaS - Platform as a Service
+
+Runtime environments and cloud platforms are provided for users, usually developers, to develop, test, deploy, and manage their environments.  Software engineers can deploy their applications without needing to directly spin up new servers and other IT services.
+
+### SaaS - Software as a Service
+
+Here all software and services are provided and controlled by the cloud provider.  Users pay for access to software such as Microsoft Excel, Gmail, Google Drive, etc.  No IT or software maintenence is required.
+
+![Differences between IaaS, PaaS, and SaaS from Simplilearn](resources/IaaS-PaaS-SaaS.png)
+
+### Private, Hybrid, and Public Clouds
+
+Public clouds are suitable for most users who do not need their data to be separated out and as highly secured as a private cloud.  Services are paid for on an as-needed basis and those resources are owned by the cloud provider.  Private clouds are separated out from all the public cloud computing.  Those private cloud resources belong to the user and are not used by others, as in the public cloud.  Think of public clouds as renting a car, and private clouds as buying a car.
+
+## Cloud Native
+
+Cloud native architecture qualities:
+    **Automation** - using testing, CI/CD, git, and other such tools to automate the dev/test/deployment cycle. This could also be automating mantinence or deployment of infrastructure resources. 
+    **Self-healing** - infrastructure and apps includes health checks so they can tell if they have stopped working. When these apps or infrastructure resources fail, there is software or scripts to there to automatically redeploy those resources.
+    **Scalability** - methods or tools that allow applications and processess to scale automatically.
+    **Cost Efficient** - not only do they scale up, they scale down easily and automatically, making it cheaper to operate.
+    **Easy to Maintain** - breaking an application into many smaller, single responsibility microservices, allows for work to be spread across teams and updates to be more easily and quickly integrated.  Also makes testing easier.
+    **Secure by Default** - using patterns like zero trust computing. Meshes instead of zones?
+
+### The Twelve-Factor App: Guidline for cloud applications
+
+https://12factor.net/
+
+### AutoScaling
+
+Auto-scaling is the dynamic allocation and pruning of resources in response to demand. Kubernetes offers fully automated auto-scaling.
+
+#### Horizontal Scaling
+
+Spawning new instances of an application, allocating more physical servers, and creating more virtual machines are a few examples of horizontal scaling.  This might be creating more kubernetes clusters, more nodes on clusters, or more instances of an application. 
+
+#### Vertical Scaling
+
+Instead of pulling in more server racks to distribute the load across as in horizontal scaling, vertical scaling is increasing the compute power of the servers you are currently using.  Virtual machines and processes can be scaled up by increasing the amount of cpu they have access to.  The upper limit is the physical machines processes are being run on.
+
+**Configuring Scaling** - Configuring scaling involves setting a maximum and minimum of instances, as well as what triggers scaling.
+
+### Serverless Computing
+
+In most other cloud computing models, before an application could be deployed, the infrastructure or development team would need to prepare several resources like networks, load balancers, VMs and operating systems.  These would be needed for even a simple web app.
+
+Instead of managing all those infrastructure and system elements, "serverless" computing lets you simply give the cloud provider your application or script and it determines automatically what resources are needed and allocates them.  Servers are indeed involved but the cloud provider chooses and allocates them.  All cloud providers offer serverless runtimes.
+
+Serverless is sometimes called FaaS (Function as a Service).  Often instead of a company only using serverless systems, they are used in addition to container orchestration and or more traditional IT tools like VMs.  
+
+Small stateless scripts like business logic, events, scheduled tasks and batch processing, is perfect for serverless.
+
+### Open Container Initiative
+
+An open-source organization subset of Linux Foundation that sets standards for container technology.
+
+# Containers
+
+**Why Containers?**
+Before containers, the most efficient way to run applications was to spin up virtual machines.  Because these virtual machines however simulate all the parts of a computer, including the kernel of the operating system, they come with a lot of overhead.  Containers solve this problem.
+
+Before containers, system administrators needed to install all the dependencies by hand for a program, making sure all configurations of the network and OS are right for the app.  Containers make is so you easily can specify those dependcy and configuration needs, and the container takes care of it.
+
+## chroot and Isolating Processes
+
+The oldest version of container-like tecnology was the `chroot` command which isolates a process at a particular location from all the other files in the system.  At the location where it is called, a virtual root filesystem is spawned there in the effective chroot jail, locked out from the external files.
+
+Namespaces and cgroups are used in linux to isolate processes and resources even more than chroot can.  Namespaces can be used to isolate resources like a network.
+
+Linux Kernel 5.6 has the following namespaces:
+    pid - process ID
+    net - allows processes to have their own network, including IP address
+    mnt - abstracts the filesystem view and manages mount points
+    ipc - inter-process communication provides a seperation for named, shared memory segments
+    user - gives a process its own set of user IDs and group IDs
+    uts - unix time sharing can give processes a hostname and domain name
+    cgroup - allows a process to have its own set of cgroup root directories
+    time - virtualizes the clock of the system
+
+Under the hood in docker, namespaces like these are used to isolate the container processes from the rest of the system.
+
+Virtual machines have more overhead than containers because containers are only processes, whereas for a VM you need to simulate all parts of a computer and run an entire operating system.
+
+## Container Storage Interface (CSI), CNI, and CRI
+
+Study CSI, Container Network Interfaces, and Containter Runtime Interface for KCNA exam.
+
+## Container Runtimes
+
+If you have an industry-standard container, you don't need Docker to run it.  Only a basic implementation of the OCI runtime-spec standard like runC. Under the hood of Docker, runC is used to start the containers.
+
+Lookup podman as drop-in Docker replacement.
+
+## Podman
+
+Create and start podman VM:
+    podman machine init
+
+## Docker
+
+Run containers with simple:
+    docker run nginx
+
+All the docker commands:
+    docker help
+
+Stop docker container:
+    docker ps
+    docker stop [processID]
+
+
+
+### Docker Troubleshooting
+
+Problem:
+    Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+
+Solution 1: Start Docker service with Docker Desktop. Open Docker Desktop. Problem solved.
+
 
 # Deployment
 
@@ -391,8 +518,6 @@ Deployments not pods:  Kubernetes users and admins work with deployments, which 
 For a database however, all the pods running it need a mechanism for connecting which is why it's important to use stateful set to create them, not deployments. Statefulsets are for anything that requires to maintain its state including stateful apps.  It's much harder to set up statefulsets in kubernetes though which is why DBs are usually housed outside a Kubernetes cluster.
 
 
-
-
 Cheat Sheet: <https://kubernetes.io/docs/reference/kubectl/cheatsheet/>
 
 Enter Kubernetes cluster:
@@ -465,97 +590,10 @@ The two ways to configure a pod to use a ConfigMap are:
 **What is hostPort and hostIP?**
 <https://stackoverflow.com/questions/63691946/kubernetes-what-is-hostport-and-hostip-used-for>
 
-# Cloud Computing
-
-## Types of Service Models
-
-### IaaS - Infrastructure as a Service
-
-If a business needs a Virtual Machine, then IaaS is the way to go.  This provides compute, data, and network resources to the user in a pay-as-you-go model.  The company or entity using the IaaS handles all of their deployment and allocation needs and the cloud provider supplies the bare resources.  Users: IT Professionals
-
-### PaaS - Platform as a Service
-
-Runtime environments and cloud platforms are provided for users, usually developers, to develop, test, deploy, and manage their environments.  Software engineers can deploy their applications without needing to directly spin up new servers and other IT services.
-
-### SaaS - Software as a Service
-
-Here all software and services are provided and controlled by the cloud provider.  Users pay for access to software such as Microsoft Excel, Gmail, Google Drive, etc.  No IT or software maintenence is required.
-
-![Differences between IaaS, PaaS, and SaaS from Simplilearn](resources/IaaS-PaaS-SaaS.png)
-
-### Private, Hybrid, and Public Clouds
-
-Public clouds are suitable for most users who do not need their data to be separated out and as highly secured as a private cloud.  Services are paid for on an as-needed basis and those resources are owned by the cloud provider.  Private clouds are separated out from all the public cloud computing.  Those private cloud resources belong to the user and are not used by others, as in the public cloud.  Think of public clouds as renting a car, and private clouds as buying a car.
-
-## Cloud Native
-
-Cloud native architecture qualities:
-    **Automation** - using testing, CI/CD, git, and other such tools to automate the dev/test/deployment cycle. This could also be automating mantinence or deployment of infrastructure resources. 
-    **Self-healing** - infrastructure and apps includes health checks so they can tell if they have stopped working. When these apps or infrastructure resources fail, there is software or scripts to there to automatically redeploy those resources.
-    **Scalability** - methods or tools that allow applications and processess to scale automatically.
-    **Cost Efficient** - not only do they scale up, they scale down easily and automatically, making it cheaper to operate.
-    **Easy to Maintain** - breaking an application into many smaller, single responsibility microservices, allows for work to be spread across teams and updates to be more easily and quickly integrated.  Also makes testing easier.
-    **Secure by Default** - using patterns like zero trust computing. Meshes instead of zones?
 
 
-### The Twelve-Factor App: Guidline for cloud applications
 
-https://12factor.net/
 
-### AutoScaling
-
-Auto-scaling is the dynamic allocation and pruning of resources in response to demand. Kubernetes offers fully automated auto-scaling.
-
-#### Horizontal Scaling
-
-Spawning new instances of an application, allocating more physical servers, and creating more virtual machines are a few examples of horizontal scaling.  This might be creating more kubernetes clusters, more nodes on clusters, or more instances of an application. 
-
-#### Vertical Scaling
-
-Instead of pulling in more server racks to distribute the load across as in horizontal scaling, vertical scaling is increasing the compute power of the servers you are currently using.  Virtual machines and processes can be scaled up by increasing the amount of cpu they have access to.  The upper limit is the physical machines processes are being run on.
-
-**Configuring Scaling** - Configuring scaling involves setting a maximum and minimum of instances, as well as what triggers scaling.
-
-### Serverless Computing
-
-In most other cloud computing models, before an application could be deployed, the infrastructure or development team would need to prepare several resources like networks, load balancers, VMs and operating systems.  These would be needed for even a simple web app.
-
-Instead of managing all those infrastructure and system elements, "serverless" computing lets you simply give the cloud provider your application or script and it determines automatically what resources are needed and allocates them.  Servers are indeed involved but the cloud provider chooses and allocates them.  All cloud providers offer serverless runtimes.
-
-Serverless is sometimes called FaaS (Function as a Service).  Often instead of a company only using serverless systems, they are used in addition to container orchestration and or more traditional IT tools like VMs.  
-
-Small stateless scripts like business logic, events, scheduled tasks and batch processing, is perfect for serverless.
-
-### Open Container Initiative
-
-An open-source organization subset of Linux Foundation that sets standards for container technology.
-
-### Containers
-
-**Why Containers?**
-Before containers, the most efficient way to run applications was to spin up virtual machines.  Because these virtual machines however simulate all the parts of a computer, including the kernel of the operating system, they come with a lot of overhead.  Containers solve this problem.
-
-Before containers, system administrators needed to install all the dependencies by hand for a program, making sure all configurations of the network and OS are right for the app.  Containers make is so you easily can specify those dependcy and configuration needs, and the container takes care of it.
-
-#### chroot and Isolating Processes
-
-The oldest version of container-like tecnology was the `chroot` command which isolates a process at a particular location from all the other files in the system.  At the location where it is called, a virtual root filesystem is spawned there in the effective chroot jail, locked out from the external files.
-
-Namespaces and cgroups are used in linux to isolate processes and resources even more than chroot can.  Namespaces can be used to isolate resources like a network.
-
-Linux Kernel 5.6 has the following namespaces:
-    pid - process ID
-    net - allows processes to have their own network, including IP address
-    mnt - abstracts the filesystem view and manages mount points
-    ipc - inter-process communication provides a seperation for named, shared memory segments
-    user - gives a process its own set of user IDs and group IDs
-    uts - unix time sharing can give processes a hostname and domain name
-    cgroup - allows a process to have its own set of cgroup root directories
-    time - virtualizes the clock of the system
-
-Under the hood in docker, namespaces like these are used to isolate the container processes from the rest of the system.
-
-Virtual machines have more overhead than containers because containers are only processes, whereas for a VM you need to simulate all parts of a computer and run an entire operating system.
 
 # AWS
 
