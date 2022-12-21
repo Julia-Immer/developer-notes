@@ -335,7 +335,10 @@ Stop docker container:
     docker ps
     docker stop [processID]
 
+### Building a DockerFile
 
+You can build an image with only the FROM command.
+Only one CMD is run, the very last one specified in the file.  This is run after the container image is started.  
 
 ### Docker Troubleshooting
 
