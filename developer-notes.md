@@ -91,6 +91,17 @@ Make nested directories , folders :
 A historical sketch of the filesystem hierarchy.  The modern OS X filesystem is documented in the “File System Programming Guide” available on Apple Developer.
     man heir
 
+## history
+
+To see all the history:
+    history 0
+
+or:
+    less ~/.zsh_history
+
+To check the number of bytes alloted for history:
+    echo $HISTSIZE
+
 ## which
 
 which – locate a program file in the user's path.
@@ -325,6 +336,27 @@ Create and start podman VM:
 
 ## Docker
 
+### Docker notes from infrastructure
+
+Docker is a broad set of technologies that are used to work with containers. Docker has it's own container runtime, and that is what I am use to. However, Kubernetes (k8s) is depreciating docker as a runtime within it's environment. You might want to look into using other container runtimes than docker, such as containerd or cri-o to build your image. I know docker, so that is what I'll use as an example, and other container runtimes should be very similar if not identical commands.
+Docker is what you would use to create an image. You can think of an image almost like a mini computer. It's what we load into the k8s container which runs in a k8s pod.
+[This is a good docker sample](https://docs.docker.com/get-started/02_our_app/). You can see the file, as well as how to build it and run it. There is a lot of information there, and you could spend a summer just learning docker (don't do that).
+Once you have an image, the goal is to get the image on the the k8s cluster. A normal process would be to tag the image and then push it to a repository such as docker-registry or nexus. I'm familiar with nexus because we are on a close network and don't have open source platforms to utilize. You will want to build the docker image such that the name contains what repo it is suppose to go to, along with an identifying tag. Then push it to that repo.
+    docker built -t nexus-repo/serviceABC:v1
+    docker push nexus-repo/serviceABC:v1
+Now the image is in a location that you can access it from your k8s cluster and will pull it during the creation of your k8s deployment/pods. This is an important piece of the puzzle.
+
+### The DockerFile
+
+You can build an image with only the FROM command.
+Only one CMD is run, the very last one specified in the file.  This is run after the container image is started.  
+
+### Building the image
+
+    `docker build -t name-of-app .`
+
+### Running/stopping containers
+
 Run containers with simple:
     docker run nginx
 
@@ -335,10 +367,27 @@ Stop docker container:
     docker ps
     docker stop [processID]
 
-### Building a DockerFile
 
-You can build an image with only the FROM command.
-Only one CMD is run, the very last one specified in the file.  This is run after the container image is started.  
+### Docker Security
+
+If you start multiple containers on the same machine, they will all be using the same kernel, which is a security risk.  
+Best Practices:
+    DON'T run containers as root(UID 0) unless absolutely necessary - more secure with non-root user
+    One container per "machine"
+    DON'T bind to specific UID - don't use a hardcoded path for tmp data
+        `
+        USER myuser
+        ENV APP_TMP_DATA=/tmp
+        ENTRYPOINT ["/myapp"]
+        `
+    Make all executables owned by root and not writable - blocks the executing user from modifying existing binaries or scripts
+        - effectively enforces container immutability, preventing someone from injecting code by modifying the executables
+        - without that, the application could be modified *after* runtime
+    
+    Use Multistage building methods 
+       - helps make containers smaller by copying in only the necessary artifacts of a build into the final image
+         - I believe this means: example is java app, after maven build, copy in *only* the class files, and dependencies, etc that the jvm needs to run it. Leaving out original code the javabytes were compiled from.
+
 
 ### Docker Troubleshooting
 
@@ -346,7 +395,6 @@ Problem:
     Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 
 Solution 1: Start Docker service with Docker Desktop. Open Docker Desktop. Problem solved.
-
 
 # Deployment
 
@@ -409,15 +457,6 @@ A sample project could look something like this:
     - serviceABC/tests/ <- automated tests
     - serviceABC/.gitlab-ci.yml <- pipeline definition
 
-### Docker
-
-Docker is a broad set of technologies that are used to work with containers. Docker has it's own container runtime, and that is what I am use to. However, Kubernetes (k8s) is depreciating docker as a runtime within it's environment. You might want to look into using other container runtimes than docker, such as containerd or cri-o to build your image. I know docker, so that is what I'll use as an example, and other container runtimes should be very similar if not identical commands.
-Docker is what you would use to create an image. You can think of an image almost like a mini computer. It's what we load into the k8s container which runs in a k8s pod.
-[This is a good docker sample](https://docs.docker.com/get-started/02_our_app/). You can see the file, as well as how to build it and run it. There is a lot of information there, and you could spend a summer just learning docker (don't do that).
-Once you have an image, the goal is to get the image on the the k8s cluster. A normal process would be to tag the image and then push it to a repository such as docker-registry or nexus. I'm familiar with nexus because we are on a close network and don't have open source platforms to utilize. You will want to build the docker image such that the name contains what repo it is suppose to go to, along with an identifying tag. Then push it to that repo.
-    docker built -t nexus-repo/serviceABC:v1
-    docker push nexus-repo/serviceABC:v1
-Now the image is in a location that you can access it from your k8s cluster and will pull it during the creation of your k8s deployment/pods. This is an important piece of the puzzle.
 
 ### Helm
 
@@ -450,6 +489,12 @@ Now that you have your charts filled out, move the files to your cluster and ins
     helm -n namespace123 upgrade --install serviceABC /tmp/serviceABD.tgz -f /tmp/special-values/values.yaml --set image=nexus/your_image:v10 --wait --timeout 600s
 
 The above command will upgrade your service if it already exists (so you don't have to delete it first) or will install it if it doesn't already exist. It also is pointing to a special v--set values that overrides the values file that was just used. It also waits for the deployment to finish instead of kicking it off and returning right away, but will mark it as failed after 500 seconds.
+
+#### Install the latest version of Helm
+ 
+    $ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    $ chmod 700 get_helm.sh
+    $ ./get_helm.sh
 
 ### Kubectl
 
