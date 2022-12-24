@@ -366,7 +366,7 @@ Only one CMD is run, the very last one specified in the file.  This is run after
 
     `docker build -t name-of-app .`
 
-### Running/stopping containers
+### Docker commands
 
 Run containers with simple:
     docker run nginx
@@ -378,6 +378,14 @@ Stop docker container:
     docker ps
     docker stop [processID]
 
+See all current running docker containers:
+    docker ps
+
+See all images docker runtime has access to:
+    docker images
+
+Remove a specific image:
+    `docker rmi -f [containerID]`
 
 ### Docker Security
 
@@ -847,10 +855,12 @@ Upgrade pip:
 ### pip install packages
 
 System-wide install:
-    cd ..
+    cd
     python3 -m pip install synthesizer
-
-
+    
+Specific and min version:
+    python3 -m pip install SomePackage==1.0.4     # specific version
+    python3 -m pip install 'SomePackage>=1.0.4'     # minimum version
 
 ## Stings
 
