@@ -384,6 +384,8 @@ Stop docker container:
 If you start multiple containers on the same machine, they will all be using the same kernel, which is a security risk.  
 Best Practices:
     DON'T run containers as root(UID 0) unless absolutely necessary - more secure with non-root user
+     - make sure user you run container with exists inside the container
+     - don't forget to change USER to a non-default user
     One container per "machine"
     DON'T bind to specific UID - don't use a hardcoded path for tmp data
         `
@@ -836,6 +838,19 @@ At start of service inject IP address and port.  Mockito will mock the jedis con
 
 
 # Python
+
+## pip
+
+Upgrade pip:
+    python3 -m pip install --upgrade pip
+
+### pip install packages
+
+System-wide install:
+    cd ..
+    python3 -m pip install synthesizer
+
+
 
 ## Stings
 
