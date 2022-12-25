@@ -360,7 +360,17 @@ Now the image is in a location that you can access it from your k8s cluster and 
 ### The DockerFile
 
 You can build an image with only the FROM command.
-Only one CMD is run, the very last one specified in the file.  This is run after the container image is started.  
+Only one CMD is run, the very last one specified in the file.  This is run after the container image is started.
+
+#### COPY vs ADD
+
+Both COPY and ADD copy files and directories, along with their contents into the image.
+
+ADD however has extra features where it can also fetch tar archives from a URL and unpack them.  COPY is generally prefered if you are only wanting to move files.  Always use COPY when you don't need extraction.
+
+BEST practice is to avoid ADD entirely and use `RUN curl` etc.
+
+
 
 ### Building the image
 
