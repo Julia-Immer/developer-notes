@@ -330,9 +330,10 @@ Under the hood in docker, namespaces like these are used to isolate the containe
 
 Virtual machines have more overhead than containers because containers are only processes, whereas for a VM you need to simulate all parts of a computer and run an entire operating system.
 
+
 ## Container Storage Interface (CSI), CNI, and CRI
 
-Study CSI, Container Network Interfaces, and Containter Runtime Interface for KCNA exam.
+Study Container Storage Interface, Container Network Interfaces, and Containter Runtime Interface for KCNA exam.
 
 ## Container Runtimes
 
@@ -370,13 +371,13 @@ ADD however has extra features where it can also fetch tar archives from a URL a
 
 BEST practice is to avoid ADD entirely and use `RUN curl` etc.
 
-
+#### 
 
 ### Building the image
 
     `docker build -t name-of-app .`
 
-### Docker commands
+### Docker CLI
 
 Run containers with simple:
     docker run nginx
@@ -396,6 +397,12 @@ See all images docker runtime has access to:
 
 Remove a specific image:
     `docker rmi -f [containerID]`
+
+Remove all dangling images (old extras from the same build):
+    docker rmi -f $(docker images -f dangling=true -q)
+
+Remove a specific image by tag:
+
 
 ### Docker Security
 
@@ -527,23 +534,6 @@ The above command will upgrade your service if it already exists (so you don't h
     $ chmod 700 get_helm.sh
     $ ./get_helm.sh
 
-### Kubectl
-
-Now that you have your helm charts installed into k8s, you can see your service within the cluster.
-    kubectl get deployments
-    kubectl describe deployment deployment-name
-    kubectl get pods
-    kubectl describe pod pod-name
-    kubectl get services
-    kubectl describe service service-name
-    kubectl exec pod-name -- ls /  (executes commands within your pod for testing)
-    kubectl exec -it pod-name -- /bin/sh (allows you to enter into a shell in your image for testing)
-    curl service-name:80 (hit your application)
-
-There are a lot of kubectl commands you may want to use, but those will get you started.
-You may want to look into setting up a "NodePort" service instead of a "ClusterIP" service to allow you to hit your pods from outside of the cluster. Do some research and then ask questions later on if needed.
-Pipeline
-Whatever you are doing by hand to build your application, test it, and deploy it should be captured in the pipeline. That way you can focus on writing code and making changes. As soon as you push out a change, it all happens automagically and your hotness is in the cluster without you having to do anything.
 
 ### Configuring the Gitlab Runner
 
@@ -556,13 +546,14 @@ I also ran into an issue infrastructure helped with when initially setting this 
     ip link delete docker0
     service docker start
 
-### Practicing With Minikube
+    
+# Container Orchestration Fundamentals
 
-Starting two nodes in minikube:
-    minikube start --nodes 2
+Kubernetes is a container orchestration system.  Most orchestration systems, including kubernetes, consist of two parts: the control plane, which manages the containers, and the worker nodes, where the containers are run.
 
-Stopping/deleting all minikube clusters:
-    minikube delete --all --purge
+## Networking
+
+Microservice archetecture depends heavily on network communication.  A Microservice implements an interface which can be called to make a request. An example would be a service which responds with a playlist based on a selected artist.  Network namespaces are used to allow each container to own a unique IP address. 
 
 # Kubernetes
 
@@ -584,6 +575,7 @@ The master node itself is a container running.  And also inbedded in the cluster
 
 Each pod, the smallest unit in kubernetes, runs one application.  Each pod has a unique IP address which can be used to access it.  However that unique IP vanishes if the pod dies which is why you can give them a service IP address which is permanent.  The IP given by the Service IP is often messy however which is where Ingress comes in.  Kubernetes uses Ingress to alias and route requests in. So you can turn: http://127.9.0.101:7070 into http://my-app/
 
+
 ## Volume
 
 Since kubernetes revolves around easily replicating and replacing pods if they die, if you running a database there, you could easily lose your data if its pod dies.  For this reason Kubernetes lets you attach a volume to pods to backup data.  Using volumes, kubernetes attaches physical, hard-drive storage to your pods.  This can be on the same machine the pod is running on, or a remote server outside the cluster.
@@ -596,6 +588,23 @@ Deployments not pods:  Kubernetes users and admins work with deployments, which 
 
 For a database however, all the pods running it need a mechanism for connecting which is why it's important to use stateful set to create them, not deployments. Statefulsets are for anything that requires to maintain its state including stateful apps.  It's much harder to set up statefulsets in kubernetes though which is why DBs are usually housed outside a Kubernetes cluster.
 
+## Kubectl
+
+Now that you have your helm charts installed into k8s, you can see your service within the cluster.
+    kubectl get deployments
+    kubectl describe deployment deployment-name
+    kubectl get pods
+    kubectl describe pod pod-name
+    kubectl get services
+    kubectl describe service service-name
+    kubectl exec pod-name -- ls /  (executes commands within your pod for testing)
+    kubectl exec -it pod-name -- /bin/sh (allows you to enter into a shell in your image for testing)
+    curl service-name:80 (hit your application)
+
+There are a lot of kubectl commands you may want to use, but those will get you started.
+You may want to look into setting up a "NodePort" service instead of a "ClusterIP" service to allow you to hit your pods from outside of the cluster. Do some research and then ask questions later on if needed.
+Pipeline
+Whatever you are doing by hand to build your application, test it, and deploy it should be captured in the pipeline. That way you can focus on writing code and making changes. As soon as you push out a change, it all happens automagically and your hotness is in the cluster without you having to do anything.
 
 Cheat Sheet: <https://kubernetes.io/docs/reference/kubectl/cheatsheet/>
 
@@ -669,9 +678,13 @@ The two ways to configure a pod to use a ConfigMap are:
 **What is hostPort and hostIP?**
 <https://stackoverflow.com/questions/63691946/kubernetes-what-is-hostport-and-hostip-used-for>
 
+### Practicing With Minikube
 
+Starting two nodes in minikube:
+    minikube start --nodes 2
 
-
+Stopping/deleting all minikube clusters:
+    minikube delete --all --purge
 
 
 # AWS
