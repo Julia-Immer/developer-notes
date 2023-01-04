@@ -551,6 +551,17 @@ I also ran into an issue infrastructure helped with when initially setting this 
 
 Kubernetes is a container orchestration system.  Most orchestration systems, including kubernetes, consist of two parts: the control plane, which manages the containers, and the worker nodes, where the containers are run.
 
+Container Orchestration systems provide a way of building a cluster from multiple servers and allowing containers to be hosted on top. This provides the environment to run modern microservice architecture, which is an application comprised of many independent single-responsibility containers.
+
+Things a Container Orchestration System must do:
+    - Provide computing resources like virtual machines that containers can run on
+    - Schedule containers to servers in an efficient way
+    - Allocate resources like CPU and memory to containers
+    - Manage availability of containers. Schedule them if they fail.
+    - Scale containers if load increases. And down scale things if load decreases.
+    - Provide a network for connecting the containers
+    - Provision storage if containers need data persistence
+
 ## Networking
 
 Microservice archetecture depends heavily on network communication.  A Microservice implements an interface which can be called to make a request. An example would be a service which responds with a playlist based on a selected artist.  Network namespaces are used to allow each container to own a unique IP address. 
