@@ -341,6 +341,30 @@ If you have an industry-standard container, you don't need Docker to run it.  On
 
 Lookup podman as drop-in Docker replacement.
 
+Containers are NOT the same as virtual machines as they share the kernel of the host machine they are run on.  Containers at their core are only isolated processes, an expansion of the abilities of chroot.
+
+VMs have much more overhead, needing much more boot time and resources than containers.  Containers are only processes so they can be started much more quickly than VMs.
+
+Docker follows the Open Container Initiative (or OCI) runtime standards.  OCI implements and maintains a low-level runtime reference called runC.  runC is used by the major container runtimes including Docker.
+
+Container images:  A lightweight executable package of software which contains all the necessary system settings, system tools, dependencies, code, and runtime to run an application.
+
+Docker
+
+-t     Tag flag. Put the tag directly after -t.
+-f     File flag. Put path to the Dockerfile you want used directly after -f.
+
+You can use docker to push and pull an image to and from a remote registry, aka a web server where people can upload and download images. 
+
+	docker push myregistry.com/my-image
+	docker pull myregistry.com/my-image
+
+
+Security
+
+When containers are started on the same machine, they share the same kernel.  This creates security concerns if containers are allowed to call kernel functions (for example like killing other processes).  If the container runs as a root user then that opens the door to possibl 
+
+
 ## Podman
 
 Create and start podman VM:
@@ -561,6 +585,8 @@ Things a Container Orchestration System must do:
     - Scale containers if load increases. And down scale things if load decreases.
     - Provide a network for connecting the containers
     - Provision storage if containers need data persistence
+
+
 
 ## Networking
 
