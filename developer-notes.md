@@ -458,118 +458,6 @@ Problem:
 
 Solution 1: Start Docker service with Docker Desktop. Open Docker Desktop. Problem solved.
 
-# Deployment
-
-Build jar:
-mvn clean package -Dquarkus.package.type=uber-jar
-
-Helm package:
-helm3 package heimdalservice-chart
-
-Send helm file
-scp heimdalservice-chart-0.1.0.tgz  kleine@kctl-intern1:hello-world
-
-Build docker image:
-docker build -f heimdall-service/src/main/docker/Dockerfile.jvm -t nexus-trunk.udev.six3/heimdall-service .
-
-Push docker image to nexus:
-docker push nexus-trunk.udev.six3/heimdall-service
-
-Enter Kubernetes cluster:
-ssh kctl-intern1
-
-Uninstall old helm charts:
-helm uninstall -n beta heimdall-service
-
-Install new helm charts:
-helm install heimdall-service heimdallservice-chart-0.1.0.tgz -n beta
-
-## Pipeline Variable Scopes
-
-Variables declared inside the .gitlab-ci.yml CAN be accessed inside the pom.xml and settings.xml files.  Such pipeline variables must be all caps.
-
-Variables declared inside the pom.xml inside the `<properties></properties>` tag CAN be used inside the .gitlab-ci.yml, pom.xml, and pipelines.
-
-Variables declared on gitlab.com CAN be used inside the pom.xml, settings.xml and the pipeline .gitlab-ci.yml.
-
-## Default Variables For Pipelines
-
-Gitlab has many default variables available for use. Here is a link to them: <https://docs.gitlab.com/ee/ci/variables/predefined_variables.html>
-
-You can use these anywhere inside the pom.xml, settings.xml and .gitlab-ci.yml.
-
-To see all the values available to you inside your runner use:
-
-    stages:
-    - debug
-
-    print-all-env-vars-job:
-    stage: debug
-    script:
-        - echo "GitLab CI/CD | Print all environment variables"
-        - env
-
-## Notes From Infrastructure On Builds and Pipelines
-
-A sample project could look something like this:
-    - serviceABC/
-    - serviceABC/biz/ <- holds actual logic that you write println("Hello, World!")
-    - serviceABC/helm-charts/ <- kubernetes charts with values.yaml file
-    - serviceABC/service/ <- framework such as spring boot that your biz logic would be inserted into
-    - serviceABC/tests/ <- automated tests
-    - serviceABC/.gitlab-ci.yml <- pipeline definition
-
-
-### Helm
-
-Helm is pretty simple. It's not just made for k8s, but it's what is used by everyone I've ever known that deploys into k8s. You can use helm for anything that needs search/replace and version control. Helm is a VERY fancy search/replace tool that also gives you the ability to rollback to previous versions of your k8s deployment. You could in theory create your k8s files, and then "apply" those files by hand one by one. Depending on how big your deployment is, that could be a giant pain. Or you could bundle all of your k8s files together into a single helm chart and push it to a k8s cluster. And better yet, you can make it so your chart can deploy onto multiple k8s clusters and vary the details of of the deployment (name, cpu, etc) it's using in the values.yaml file. Now you can see why helm is so helpful.
-Quick note, make sure that you are using version 3 of helm (helm3). Helm2 will require you to have a tiller within your k8s namespace, and it's just a hassle. I know you prob don't know what I'm talking about, and that's fine. Just use helm3. If you really care, google it.
-    helm version
-    helm create serviceABC
-    ls -1 serviceABC
-
-- charts <- Dependent charts. You prob wont need this.
-- Chart.yaml <- Define your chart (name, version, description, etc). Metadata on your chart.
-- values.yaml <- File that holds values to be replaced into the template files below. Substitute values files to quickly change your flavor of deployment.
-- templates <- The good stuff.
-  - deployment.yaml <- populate this
-  - service.yaml <- populate this
-  - hpa.yaml <- prob don't need
-  - serviceaccount.yaml <- prob don't need
-  - ingress.yaml <- prob don't need
-  - NOTES.txt <- prob don't need
-  - _helpers.tpl <- prob don't need
-  
-The deployment is where you will define your pods. With what little time you have, I would focus on that. The service is pretty much a load-balancer for your pods and you will want that as well. It is going to be within the pod definition within your deployment that you will define what image to use to run within your pod container. You will want to define that in your values file. I think I saw you guys are already doing that.
-However, the hpa, serviceaccount and ingress files are for advanced configuration, so I wouldn't worry about those. The _helpers.tmp file is for advanced usage of helm. If you guys have time to learn how to define Go templating in that file than great. But I won't worry about it.
-Now that you have your charts filled out, move the files to your cluster and install them.
-    tar -zcvf serviceABC.tgz serviceABC/
-    scp serviceABC.tgz user@cluster:/tmp
-    ssh user@cluster
-    helm install serviceABC /tmp/serviceABC.tgz
-    You can get fancy and add flags such as:
-    helm -n namespace123 upgrade --install serviceABC /tmp/serviceABD.tgz -f /tmp/special-values/values.yaml --set image=nexus/your_image:v10 --wait --timeout 600s
-
-The above command will upgrade your service if it already exists (so you don't have to delete it first) or will install it if it doesn't already exist. It also is pointing to a special v--set values that overrides the values file that was just used. It also waits for the deployment to finish instead of kicking it off and returning right away, but will mark it as failed after 500 seconds.
-
-#### Install the latest version of Helm
- 
-    $ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-    $ chmod 700 get_helm.sh
-    $ ./get_helm.sh
-
-
-### Configuring the Gitlab Runner
-
-Within the /etc/gitlab-runner/config.toml file that describes the runners configuration, you can define mounts that will be available to the executor when they spin up to execute a job. If you want docker to be able to run within the container and run docker commands, you will need to mount the docker executable and the docker socket that allows the server-side daemon to communicate with its cmd line interface. The volumes will look like this in your runner config.
-volumes = ["/usr/bin/docker:/usr/bin/docker", "/var/run/docker.sock:/var/run/docker.sock", "/cache"]
-I also ran into an issue infrastructure helped with when initially setting this up where I had to flush the nat iptable and re-create the docker bridge. I'll include this just in case you run into this as well.
-    pkill docker
-    iptables -t nat -F
-    ifconfig docker0 down
-    ip link delete docker0
-    service docker start
-
     
 # Container Orchestration Fundamentals
 
@@ -587,10 +475,27 @@ Things a Container Orchestration System must do:
     - Provision storage if containers need data persistence
 
 
-
 ## Networking
 
 Microservice archetecture depends heavily on network communication.  A Microservice implements an interface which can be called to make a request. An example would be a service which responds with a playlist based on a selected artist.  Network namespaces are used to allow each container to own a unique IP address. 
+
+Virtual networks and network namespaces allow containers to have unique IP addresses, but still be connected by a common network that allows easy access from the outside.
+
+Network namespaces allow multiple applications to open the same port, while still allowing them to have a unique IP address.
+
+A virtual network is overlaid across multiple host systems to allow inter-container-communication.
+
+https://github.com/containernetworking/cni
+
+### Service Meshes
+
+Service meshes are used to manage all that traffic between containers, as well as all the settings, proxies, and security measures like encryption.
+
+When you have hundreds or thousands of containers, managing all of the unique IP addresses, the encryption and security measures, and setting up proper routing would be insurmountable.  Service Meshes allow for automation of these processes.
+
+The **Service Mesh Interface** is a standard for service meshes which focus on those that run on Kubernetes.
+
+(Service Mesh Interface)[https://github.com/servicemeshinterface/smi-spec]
 
 # Kubernetes
 
@@ -723,6 +628,117 @@ Starting two nodes in minikube:
 Stopping/deleting all minikube clusters:
     minikube delete --all --purge
 
+# Deployment
+
+Build jar:
+mvn clean package -Dquarkus.package.type=uber-jar
+
+Helm package:
+helm3 package heimdalservice-chart
+
+Send helm file
+scp heimdalservice-chart-0.1.0.tgz  kleine@kctl-intern1:hello-world
+
+Build docker image:
+docker build -f heimdall-service/src/main/docker/Dockerfile.jvm -t nexus-trunk.udev.six3/heimdall-service .
+
+Push docker image to nexus:
+docker push nexus-trunk.udev.six3/heimdall-service
+
+Enter Kubernetes cluster:
+ssh kctl-intern1
+
+Uninstall old helm charts:
+helm uninstall -n beta heimdall-service
+
+Install new helm charts:
+helm install heimdall-service heimdallservice-chart-0.1.0.tgz -n beta
+
+## Pipeline Variable Scopes
+
+Variables declared inside the .gitlab-ci.yml CAN be accessed inside the pom.xml and settings.xml files.  Such pipeline variables must be all caps.
+
+Variables declared inside the pom.xml inside the `<properties></properties>` tag CAN be used inside the .gitlab-ci.yml, pom.xml, and pipelines.
+
+Variables declared on gitlab.com CAN be used inside the pom.xml, settings.xml and the pipeline .gitlab-ci.yml.
+
+## Default Variables For Pipelines
+
+Gitlab has many default variables available for use. Here is a link to them: <https://docs.gitlab.com/ee/ci/variables/predefined_variables.html>
+
+You can use these anywhere inside the pom.xml, settings.xml and .gitlab-ci.yml.
+
+To see all the values available to you inside your runner use:
+
+    stages:
+    - debug
+
+    print-all-env-vars-job:
+    stage: debug
+    script:
+        - echo "GitLab CI/CD | Print all environment variables"
+        - env
+
+## Notes From Infrastructure On Builds and Pipelines
+
+A sample project could look something like this:
+    - serviceABC/
+    - serviceABC/biz/ <- holds actual logic that you write println("Hello, World!")
+    - serviceABC/helm-charts/ <- kubernetes charts with values.yaml file
+    - serviceABC/service/ <- framework such as spring boot that your biz logic would be inserted into
+    - serviceABC/tests/ <- automated tests
+    - serviceABC/.gitlab-ci.yml <- pipeline definition
+
+
+### Helm
+
+Helm is pretty simple. It's not just made for k8s, but it's what is used by everyone I've ever known that deploys into k8s. You can use helm for anything that needs search/replace and version control. Helm is a VERY fancy search/replace tool that also gives you the ability to rollback to previous versions of your k8s deployment. You could in theory create your k8s files, and then "apply" those files by hand one by one. Depending on how big your deployment is, that could be a giant pain. Or you could bundle all of your k8s files together into a single helm chart and push it to a k8s cluster. And better yet, you can make it so your chart can deploy onto multiple k8s clusters and vary the details of of the deployment (name, cpu, etc) it's using in the values.yaml file. Now you can see why helm is so helpful.
+Quick note, make sure that you are using version 3 of helm (helm3). Helm2 will require you to have a tiller within your k8s namespace, and it's just a hassle. I know you prob don't know what I'm talking about, and that's fine. Just use helm3. If you really care, google it.
+    helm version
+    helm create serviceABC
+    ls -1 serviceABC
+
+- charts <- Dependent charts. You prob wont need this.
+- Chart.yaml <- Define your chart (name, version, description, etc). Metadata on your chart.
+- values.yaml <- File that holds values to be replaced into the template files below. Substitute values files to quickly change your flavor of deployment.
+- templates <- The good stuff.
+  - deployment.yaml <- populate this
+  - service.yaml <- populate this
+  - hpa.yaml <- prob don't need
+  - serviceaccount.yaml <- prob don't need
+  - ingress.yaml <- prob don't need
+  - NOTES.txt <- prob don't need
+  - _helpers.tpl <- prob don't need
+  
+The deployment is where you will define your pods. With what little time you have, I would focus on that. The service is pretty much a load-balancer for your pods and you will want that as well. It is going to be within the pod definition within your deployment that you will define what image to use to run within your pod container. You will want to define that in your values file. I think I saw you guys are already doing that.
+However, the hpa, serviceaccount and ingress files are for advanced configuration, so I wouldn't worry about those. The _helpers.tmp file is for advanced usage of helm. If you guys have time to learn how to define Go templating in that file than great. But I won't worry about it.
+Now that you have your charts filled out, move the files to your cluster and install them.
+    tar -zcvf serviceABC.tgz serviceABC/
+    scp serviceABC.tgz user@cluster:/tmp
+    ssh user@cluster
+    helm install serviceABC /tmp/serviceABC.tgz
+    You can get fancy and add flags such as:
+    helm -n namespace123 upgrade --install serviceABC /tmp/serviceABD.tgz -f /tmp/special-values/values.yaml --set image=nexus/your_image:v10 --wait --timeout 600s
+
+The above command will upgrade your service if it already exists (so you don't have to delete it first) or will install it if it doesn't already exist. It also is pointing to a special v--set values that overrides the values file that was just used. It also waits for the deployment to finish instead of kicking it off and returning right away, but will mark it as failed after 500 seconds.
+
+#### Install the latest version of Helm
+ 
+    $ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    $ chmod 700 get_helm.sh
+    $ ./get_helm.sh
+
+
+### Configuring the Gitlab Runner
+
+Within the /etc/gitlab-runner/config.toml file that describes the runners configuration, you can define mounts that will be available to the executor when they spin up to execute a job. If you want docker to be able to run within the container and run docker commands, you will need to mount the docker executable and the docker socket that allows the server-side daemon to communicate with its cmd line interface. The volumes will look like this in your runner config.
+volumes = ["/usr/bin/docker:/usr/bin/docker", "/var/run/docker.sock:/var/run/docker.sock", "/cache"]
+I also ran into an issue infrastructure helped with when initially setting this up where I had to flush the nat iptable and re-create the docker bridge. I'll include this just in case you run into this as well.
+    pkill docker
+    iptables -t nat -F
+    ifconfig docker0 down
+    ip link delete docker0
+    service docker start
 
 # AWS
 
