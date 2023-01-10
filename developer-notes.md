@@ -487,6 +487,18 @@ A virtual network is overlaid across multiple host systems to allow inter-contai
 
 https://github.com/containernetworking/cni
 
+### Service Discovery
+
+**Service Discovery**
+The process of finding other services in a network and requesting information about them.
+
+Two approaches to service discovery exist:
+    Modern DNS servers - a service API is used to register new services as needed with the DNS server.
+    Key-Value-Store - A highly consistent datastore is used to store information about services. ex: etcd
+
+**Service Registry** 
+Where all the information about containers and/or servers is stored.
+
 ### Service Meshes
 
 Service meshes are used to manage all that traffic between containers, as well as all the settings, proxies, and security measures like encryption.
@@ -495,7 +507,18 @@ When you have hundreds or thousands of containers, managing all of the unique IP
 
 The **Service Mesh Interface** is a standard for service meshes which focus on those that run on Kubernetes.
 
-(Service Mesh Interface)[https://github.com/servicemeshinterface/smi-spec]
+(Service Mesh Interface Spec)[https://github.com/servicemeshinterface/smi-spec]
+
+Instead of implementing all the functionality needed like: monitoring, routing, filtering, access control, encryption, and more, within your applications, a second container is started called a "proxy" and the proxies handle all these functions.
+
+The service mesh allows these proxies to be started up and configured automatically so that you don't have to do it for every single container.
+
+Examples of Proxies: nginx, haproxy, envoy
+
+Examples of Service Meshes: Istio, linkerd 
+
+When service meshes are used, containers don't talk directly with each other.  Instead, all traffic is routed between the proxies.
+
 
 # Kubernetes
 
@@ -584,6 +607,14 @@ see what ports are exposed:
 **How a Kubernetes Pod Gets an IP Address**
 <https://ronaknathani.com/blog/2020/08/how-a-kubernetes-pod-gets-an-ip-address/>
 
+## Practicing With Minikube
+
+Starting two nodes in minikube:
+    minikube start --nodes 2
+
+Stopping/deleting all minikube clusters:
+    minikube delete --all --purge
+
 ## ConfigMaps
 
 ConfigMaps are APIs that store configuration data in key-value pairs.  Their primary function is abstract the configuration for a container image away from the image itself.  A config map can contain the entire configuration for the image, or only individual properties.
@@ -620,13 +651,6 @@ The two ways to configure a pod to use a ConfigMap are:
 **What is hostPort and hostIP?**
 <https://stackoverflow.com/questions/63691946/kubernetes-what-is-hostport-and-hostip-used-for>
 
-### Practicing With Minikube
-
-Starting two nodes in minikube:
-    minikube start --nodes 2
-
-Stopping/deleting all minikube clusters:
-    minikube delete --all --purge
 
 # Deployment
 
