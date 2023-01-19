@@ -527,6 +527,8 @@ When service meshes are used, containers don't talk directly with each other.  I
 - Disaster recovery - when things go down, we can get them back - backup and restore
 - Made of *at least* 1 master node and a couple worker nodes. Each worker node has a kublet process running on it. 
 
+![Kubernetes Architecture](kubernetes-cluster.jpeg)
+
 Kubernetes allows you to run your applications remotely and scale up your services automatically as your demand grows, or automatically redeploy and replace a service node if one dies.  Once you have a cluster, the Kubernetes Deployment Controller watches your Kubernetes cluster and repairs nodes if they break, or replaces them when they die.  The Controller uses the configmaps of your service to deploy and redeploy your service.  The deployment configuration gives kubernetes instructions on how to redeploy your service.
 
 Kublet is a kubernetes process that makes it possible for the cluster to talk to itself and for tasks to be executed on worker nodes.
@@ -540,6 +542,47 @@ The master node itself is a container running.  And also inbedded in the cluster
 
 Each pod, the smallest unit in kubernetes, runs one application.  Each pod has a unique IP address which can be used to access it.  However that unique IP vanishes if the pod dies which is why you can give them a service IP address which is permanent.  The IP given by the Service IP is often messy however which is where Ingress comes in.  Kubernetes uses Ingress to alias and route requests in. So you can turn: http://127.9.0.101:7070 into http://my-app/
 
+## Control plane
+
+**Services running on control plane node**
+    kube-apiserver :  The kubernetes api server is THE most important element of a cluster.  Loose access to this and you lose access to everything.  All requests from all parts, inside and outside the cluster, go through the api server.  All compononents interact with each other through the api server. 
+
+    etcd : etcd is a database that kubernetes uses to keep track of pod and various cluster information.
+
+    kube-scheduler : In charge of choosing appropriate worker nodes for new workloads being scheduled.  It evaluates things like CPU and memory.  If it cannot find an appropriate node, it continues looking until one eventually becomes available.
+
+    kube-controller-manager :  Comprised of non-terminating control loops that manage the sate of the cluser.  Ex: one checks that the desired number of an application are always available.
+
+    cloud-controller-manager(optional) :  Used to interacted with APIs of cloud providers. Ex: create external resources like load balancers, storage, or use security groups.
+
+### kube-apiserver
+
+A RESTful interface exposed over HTTPS.
+A container running on kubernetes.
+The front-end of kubernetes resposible for all communication and processing all requests, inside and outside the cluster.
+
+Validates in 3 stages all requests, before processing them:
+    1) Authentication: proving you are who you say you are. Can be done with certificate or external identity management. Kubernetes users are *always* externally managed.
+    2) Authorization: deciding what the requester is allowed to do. Role Based Access Control(RBAC)
+    3) Admission Control: controllers can be used to modify of validate the request.  Ex: user tries to use container from untrusted registery.  admission controller blocks request.  Open Policy Agent can be used to manage control externally.
+
+
+## Worker nodes
+
+Their behavior is completely controlled by the control plane.  If a container or pod is started, that is fully determined by the control plane, through the api server.
+In other words, these worker nodes take orders and execute them, reporting issues back.  They don't make any decisions whatsoever.
+Because every decision is dictated through the kube-apiserver, if the control plane goes down, nodes with containers running will stay running.
+
+**Components of a worker node**
+    container runtime :  runs containers on worker node. containerd is popular since Docker has been depricated.
+
+    kubelet :  small agent that talks to the api-server and container runtime. kubelet gets a list of pods it needs running from the api-server. Then it starts them with the container runtime.  kubelet also does: reporting status of nodes to etcd, help node join a cluster, work on pod spec, and run health checks on pods.
+
+
+
+## namespaces
+
+A way to organize pods and resources in a cluster.  Grouping services into different namespaces, does NOT isolate their containers.
 
 ## Volume
 
