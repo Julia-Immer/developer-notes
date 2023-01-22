@@ -372,6 +372,8 @@ Create and start podman VM:
 
 ## Docker
 
+Docker uses containerd to run its containers.  It is built upon it.  So if all you need to do is *start* containers, and not build them, maybe use containerd or another more lightweight runtime in kubernetes, or elsewhere.
+
 ### Docker notes from infrastructure
 
 Docker is a broad set of technologies that are used to work with containers. Docker has it's own container runtime, and that is what I am use to. However, Kubernetes (k8s) is depreciating docker as a runtime within it's environment. You might want to look into using other container runtimes than docker, such as containerd or cri-o to build your image. I know docker, so that is what I'll use as an example, and other container runtimes should be very similar if not identical commands.
@@ -527,11 +529,11 @@ When service meshes are used, containers don't talk directly with each other.  I
 - Disaster recovery - when things go down, we can get them back - backup and restore
 - Made of *at least* 1 master node and a couple worker nodes. Each worker node has a kublet process running on it. 
 
-![Kubernetes Architecture](kubernetes-cluster.jpeg)
+![Kubernetes Architecture diagram made by myself](kubernetes-cluster.jpeg)
 
 Kubernetes allows you to run your applications remotely and scale up your services automatically as your demand grows, or automatically redeploy and replace a service node if one dies.  Once you have a cluster, the Kubernetes Deployment Controller watches your Kubernetes cluster and repairs nodes if they break, or replaces them when they die.  The Controller uses the configmaps of your service to deploy and redeploy your service.  The deployment configuration gives kubernetes instructions on how to redeploy your service.
 
-Kublet is a kubernetes process that makes it possible for the cluster to talk to itself and for tasks to be executed on worker nodes.
+Kubelet is a kubernetes process that makes it possible for the cluster to talk to itself and for tasks to be executed on worker nodes.
 Master node runs processes that are critical to cluster managment.  One such is the API Server which is what you talk to the cluster through.  This includes the CLI and the APIs that are the entry-points into the cluster.
 
 Another running on the master node is the Scheduler, which decides which worker node the next job should be run on.
@@ -545,7 +547,7 @@ Each pod, the smallest unit in kubernetes, runs one application.  Each pod has a
 ## Control plane
 
 **Services running on control plane node**
-    kube-apiserver :  The kubernetes api server is THE most important element of a cluster.  Loose access to this and you lose access to everything.  All requests from all parts, inside and outside the cluster, go through the api server.  All compononents interact with each other through the api server. 
+    kube-apiserver :  The kubernetes api server is THE most important element of a cluster.  Loose access to this and your cluster loses it's ability to communicate with itself.  All requests from all parts, inside and outside the cluster, go through the api server.  All compononents interact with each other through the api server. 
 
     etcd : etcd is a database that kubernetes uses to keep track of pod and various cluster information.
 
@@ -555,17 +557,22 @@ Each pod, the smallest unit in kubernetes, runs one application.  Each pod has a
 
     cloud-controller-manager(optional) :  Used to interacted with APIs of cloud providers. Ex: create external resources like load balancers, storage, or use security groups.
 
+What happens if the control plane has only one main node and it fails?  Then: https://tinyurl.com/yc7k9haa
+
 ### kube-apiserver
 
-A RESTful interface exposed over HTTPS.
-A container running on kubernetes.
+A RESTful interface exposed over HTTP by default, but can be set up to be HTTPS.
+A container service running on kubernetes.
 The front-end of kubernetes resposible for all communication and processing all requests, inside and outside the cluster.
 
 Validates in 3 stages all requests, before processing them:
     1) Authentication: proving you are who you say you are. Can be done with certificate or external identity management. Kubernetes users are *always* externally managed.
     2) Authorization: deciding what the requester is allowed to do. Role Based Access Control(RBAC)
-    3) Admission Control: controllers can be used to modify of validate the request.  Ex: user tries to use container from untrusted registery.  admission controller blocks request.  Open Policy Agent can be used to manage control externally.
+    3) Admission Control: controllers can be used to modify or validate the request.  Ex: user tries to use container from untrusted registery.  admission controller blocks request.  Open Policy Agent can be used to manage control externally.
 
+### kube-scheduler
+
+Makes the decision of what node to start a job on but does not actually start the job.  Continues to look for an appropriate node based on the specifications in the configmap until one is found.
 
 ## Worker nodes
 
@@ -578,7 +585,16 @@ Because every decision is dictated through the kube-apiserver, if the control pl
 
     kubelet :  small agent that talks to the api-server and container runtime. kubelet gets a list of pods it needs running from the api-server. Then it starts them with the container runtime.  kubelet also does: reporting status of nodes to etcd, help node join a cluster, work on pod spec, and run health checks on pods.
 
+    kube-proxy : A network proxy that handles inside and outside communication of your cluster. Instead of managing traffic flow on it’s own, the kube-proxy tries to rely on the networking capabilities of the underlying operating system if possible.
 
+**Container Runtime Interface**
+    specifies a standard to allow containers other than docker ones to be run on kubernetes. circa 2016
+
+## Pods
+
+The most basic unit in kubernetes, an object. A pod is like a wrapper around a container.
+
+How are containers started?  kubelet defines a pod and uses the CRI spec to communicate with the container runtime interface and then it starts the container inside that pod.
 
 ## namespaces
 
