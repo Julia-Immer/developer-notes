@@ -328,7 +328,7 @@ Linux Kernel 5.6 has the following namespaces:
 
 Under the hood in docker, namespaces like these are used to isolate the container processes from the rest of the system.
 
-Virtual machines have more overhead than containers because containers are only processes, whereas for a VM you need to simulate all parts of a computer and run an entire operating system.
+Virtual machines have more overhead than containers because containers are only processes, whereas for a VM you need to simulate all parts of a computer including cpu, ram, hard drive, and an entire operating system.
 
 
 ## Container Storage Interface (CSI), CNI, and CRI
@@ -590,11 +590,7 @@ Because every decision is dictated through the kube-apiserver, if the control pl
 **Container Runtime Interface**
     specifies a standard to allow containers other than docker ones to be run on kubernetes. circa 2016
 
-## Pods
 
-The most basic unit in kubernetes, an object. A pod is like a wrapper around a container.
-
-How are containers started?  kubelet defines a pod and uses the CRI spec to communicate with the container runtime interface and then it starts the container inside that pod.
 
 ## namespaces
 
@@ -611,6 +607,76 @@ Kubernetes is all about replicability.  Usually in production you would have rep
 Deployments not pods:  Kubernetes users and admins work with deployments, which specify how many replicas you need.  Deployments are used to create pods, rather than a person hand creating each pod.
 
 For a database however, all the pods running it need a mechanism for connecting which is why it's important to use stateful set to create them, not deployments. Statefulsets are for anything that requires to maintain its state including stateful apps.  It's much harder to set up statefulsets in kubernetes though which is why DBs are usually housed outside a Kubernetes cluster.
+
+## Kubernetes Objects
+
+Mostly abstract resources, called objects, can be used to describe how your workload will be handled.  Kubernetes objects are different than infrastructure objects, which are used for configuration, networking, and security.  And they also differ from workload-oriented objects that handle container workloads.
+
+Some problems the different kubernetes objects address:
+    container orchestration
+    scheduling
+    self-healing
+    handling issues from containers
+
+The 5 required fields of a kubernetes object yaml:
+    apiVersion: each object is versioned
+    kind: the kind of object
+    metadata:
+        name: required "name" subfield for object must be unique (namespaces can be used if you need multiple deployments with same name)
+    spec:
+        - desired state
+
+Creating, modifying or deleting objects creates a record of intent.  The kubernetes system takes it from there and does the work to start pods and containers.
+
+**List all kubernetes objects**
+    $ kubectl api-resources
+
+## Pods
+
+The most basic unit in kubernetes, an object. A pod is like a wrapper around a container.
+
+How are containers started?  kubelet defines a pod and uses the CRI spec to communicate with the container runtime interface and then it starts the container inside that pod.
+
+## Workload Objects
+
+Variations on pods, slightly more to them.
+
+ReplicaSet
+ - A controller object that makes sure the specified number of pods of your application are running. 
+
+Deployment
+ - The most feature-rich object in kubernetes.  Deployments are used to describe a complete app lifecycle, by managing ReplicaSets.  Get updated when application is updated with new container image. Great for stateless applications.
+
+StatefulSet
+  - databases and other applications which can't be replaced if they fail by creating a new pod. Retain IP addresses
+
+DaemonSet
+  - Makes sure copy of pod runs on all(or some) nodes. Ex: infrastructure tools like monitoring or logging
+
+Job
+  - like lambda, creates pod(s) that execute your script and terminate afterwards. Ex: database migrations, admin tasks
+
+CronJob
+  - Like a job, but can be set to run periodically. Ex: once per night a script scans the database, doing admin/cleaning work
+
+## Networking Objects
+
+### Services
+
+Services are used to expose pods to the outside world.  There are 4 service types:
+    ClusterIP - most common type is a virtual IP in k8s that forms a single endpoint for multiple containers
+    NodePort - extends cluster IP by adding routing rules. Opens port on every node in the cluster and maps it to the ClusterIP. For external traffic making it to the cluster.
+    LoadBalancer - extension of NodePort
+    ExternalName - aliases external IP addresses for traffic exiting the cluster.
+
+### Ingress
+
+Ingress Objects allow you to expose pods to the outside and use HTTP/HTTPS.  Ingress configures routing rules via the Ingress Controller.
+
+### NetworkPolicy
+
+K8s automatically supplies a internal cluster firewall which you can configure via the NetworkPolicy. Rules might apply to incomming(ingress) or outgoing traffic(egress).
+
 
 ## Kubectl
 
