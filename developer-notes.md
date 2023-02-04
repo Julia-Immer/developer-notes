@@ -176,6 +176,29 @@ Uses RPM-based zypper package manager.
 **Debian Family** - Debian, Ubuntu, Linux Mint
 Uses DPKG-based package manager: apt, apt-get etc. GNOME-based.
 
+## How Linux Works
+
+At the heart of linux is the kernel, which is a program that controls thr computer hardware and directs the processing of programs on it.  The kernel accesses and contorls the keyboard, mouse, cpu, ram, hard drives, and more. Also, technically "Linux" refers to the kernel.
+
+If an outside program, running on the computer wants to access the hardware - for example, play music through a speaker - it interacts through an interface called the syscall, or system call.
+
+### Components the Operating System Manages
+
+**Processes** - linux manages how to divide a program on a multi-core processor
+**Memory Management** - linux manages sharing RAM memory between processes, including the allocation and unallocation of RAM memory
+**File Management** - makes sure there's enough memory to load files into memory. loads files from disk and back.
+**Input/Output** - linux processes requests to hardware (keyboards, monitor, etc) and makes sure the right drivers are there.
+**Interpreting User Commands** - use of keyboard and mouse are interpreted so computer acts as expected
+**Resource allocation** - the combined management of RAM and processing power, so that all programs have enough memory and processing time to run.
+
+### Features of Linux
+
+Free, Stable (performance does not drop over time), Secure (many security levels available),maintainable (easy to update os and install/uninstall packages), versatile for hardware (runs on many different kinds of computers including appliances), easy to use (it's linux, duh), community supported, open source.
+
+### syscall
+
+The syscall is privileged code which is allowed to make requests to the kernel. It is what user programs use access computer hardware, which must be done via the kernel.
+
 ## User Groups on linux (REHL)
 
 To see all the groups you have available:
@@ -190,6 +213,8 @@ To find out your primary group membership:
 To see all the users in a group (this one is looking at the docker group):
     grep /etc/group -e "docker"
 
+
+## Troubleshooting Linux
 
 Problem(s):
     [scottj@b71-int-7002 /opt/scottj/workspace/heimdall-wikis (main)]$ git pull
@@ -677,6 +702,41 @@ Ingress Objects allow you to expose pods to the outside and use HTTP/HTTPS.  Ing
 
 K8s automatically supplies a internal cluster firewall which you can configure via the NetworkPolicy. Rules might apply to incomming(ingress) or outgoing traffic(egress).
 
+## ConfigMaps
+
+ConfigMaps are APIs that store configuration data in key-value pairs.  Their primary function is abstract the configuration for a container image away from the image itself.  A config map can contain the entire configuration for the image, or only individual properties.
+
+ConfigMaps help keep an application portable which is important if your goal is to run something in Kubernetes.  Keeping the configuration settings seperate from your application code helps keep your application image light and portable.
+
+With the configuration abstracted away, you can easily adjust properties depending on your environment, allowing easier transition between development, testing, and production.
+
+Are ConfigMaps secure?  They are NOT encrypted and should never contain any sensitive information.  NO passwords, etc.
+
+**Creating a ConfigMap**
+
+You can create a configmap from files, directories, and literal values.
+
+Creating a ConfigMap from a file or literal:
+    kubectl create configmap [configmap_name] [attribute] [source]
+
+Depending on the source, the attribute will be:
+    --from file (if the source is a file/directory)
+    --from-literal (if the source is a key-value pair)
+
+More ways and details: <https://phoenixnap.com/kb/kubernetes-configmap-create-and-use>
+
+**Viewing Config Maps**
+To see details from a Kubernetes ConfigMap and the values for keys, use the command:
+
+    kubectl get configmaps [configmap_name] -o yaml
+
+**Configuring a Pod to Use a ConfigMap**
+The two ways to configure a pod to use a ConfigMap are:
+    - Mount the ConfigMap as a volume
+    - Use environment variables
+
+**What is hostPort and hostIP?**
+<https://stackoverflow.com/questions/63691946/kubernetes-what-is-hostport-and-hostip-used-for>
 
 ## Kubectl
 
@@ -740,41 +800,6 @@ Starting two nodes in minikube:
 Stopping/deleting all minikube clusters:
     minikube delete --all --purge
 
-## ConfigMaps
-
-ConfigMaps are APIs that store configuration data in key-value pairs.  Their primary function is abstract the configuration for a container image away from the image itself.  A config map can contain the entire configuration for the image, or only individual properties.
-
-ConfigMaps help keep an application portable which is important if your goal is to run something in Kubernetes.  Keeping the configuration settings seperate from your application code helps keep your application image light and portable.
-
-With the configuration abstracted away, you can easily adjust properties depending on your environment, allowing easier transition between development, testing, and production.
-
-Are ConfigMaps secure?  They are NOT encrypted and should never contain any sensitive information.  NO passwords, etc.
-
-**Creating a ConfigMap**
-
-You can create a configmap from files, directories, and literal values.
-
-Creating a ConfigMap from a file or literal:
-    kubectl create configmap [configmap_name] [attribute] [source]
-
-Depending on the source, the attribute will be:
-    --from file (if the source is a file/directory)
-    --from-literal (if the source is a key-value pair)
-
-More ways and details: <https://phoenixnap.com/kb/kubernetes-configmap-create-and-use>
-
-**Viewing Config Maps**
-To see details from a Kubernetes ConfigMap and the values for keys, use the command:
-
-    kubectl get configmaps [configmap_name] -o yaml
-
-**Configuring a Pod to Use a ConfigMap**
-The two ways to configure a pod to use a ConfigMap are:
-    - Mount the ConfigMap as a volume
-    - Use environment variables
-
-**What is hostPort and hostIP?**
-<https://stackoverflow.com/questions/63691946/kubernetes-what-is-hostport-and-hostip-used-for>
 
 
 # Deployment
