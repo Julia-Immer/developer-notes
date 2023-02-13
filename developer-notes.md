@@ -191,13 +191,13 @@ If an outside program, running on the computer wants to access the hardware - fo
 **Interpreting User Commands** - use of keyboard and mouse are interpreted so computer acts as expected
 **Resource allocation** - the combined management of RAM and processing power, so that all programs have enough memory and processing time to run.
 
-### Features of Linux
-
-Free, Stable (performance does not drop over time), Secure (many security levels available),maintainable (easy to update os and install/uninstall packages), versatile for hardware (runs on many different kinds of computers including appliances), easy to use (it's linux, duh), community supported, open source.
-
 ### syscall
 
 The syscall is privileged code which is allowed to make requests to the kernel. It is what user programs use access computer hardware, which must be done via the kernel.
+
+## Features of Linux
+
+Free, Stable (performance does not drop over time), Secure (many security levels available),maintainable (easy to update os and install/uninstall packages), versatile for hardware (runs on many different kinds of computers including appliances), easy to use (it's linux, duh), community supported, open source.
 
 ## User Groups on linux (REHL)
 
